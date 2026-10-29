@@ -2,7 +2,7 @@
   "task_id": "mixed-type-ordering",
   "ok": true,
   "runner": "docker",
-  "verified_at": "2026-10-29T10:28:42Z",
+  "verified_at": "2026-10-29T10:39:51Z",
   "checks": [
     {
       "name": "task.md exists",

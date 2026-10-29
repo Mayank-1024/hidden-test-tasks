@@ -1,0 +1,33 @@
+[project]
+name = "hidden-test-tasks"
+version = "0.1.0"
+description = "Coding tasks with hidden tests, gold patches and rubrics on a vendored open-source library, a verification command that proves each task is well formed, and a sandboxed Claude solver harness."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.13"
+dependencies = [
+    "anthropic>=2.3",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.6",
+]
+
+[tool.uv]
+package = false
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+# upstream/ is vendored third-party code, kept byte-for-byte.
+extend-exclude = ["upstream", "tests/fixtures/toy_task/base"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "SIM"]

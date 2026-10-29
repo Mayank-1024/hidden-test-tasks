@@ -65,7 +65,7 @@ def estimate_from_runs(runs_dir: Path, attempts_per_task: int, tasks: int) -> st
     for report in sorted(runs_dir.glob("*/report.json")):
         data = json.loads(report.read_text(encoding="utf-8"))
         for a in data.get("attempts", []):
-            if a.get("solver") == "claude" and a.get("status") != "skipped":
+            if a.get("solver") == "claude" and a.get("status") == "graded":
                 costs.setdefault(a["task_id"], []).append(a["cost_usd"])
     if not costs:
         return "no recorded Claude attempts under runs/; run a pilot first"

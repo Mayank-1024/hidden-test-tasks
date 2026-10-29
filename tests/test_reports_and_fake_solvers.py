@@ -125,7 +125,7 @@ def test_summary_and_markdown(tmp_path):
     }
     md_path = write_report(tmp_path, meta, rows)
     md = md_path.read_text()
-    assert "| a | feature | 1/3 | 33% | 50% | $0.200 |" in md
+    assert "| a | feature | 1/3 | 33% | 50% | $0.200 | 6.0 | 1.0 | 0/3 | 0 |" in md
     assert "| b | bugfix | 1/1 | 100% |" in md
     assert "**Total:** 2/4 graded attempts resolved. Spend $0.65 (all attempts)." in md
     assert "`t2`: failed in 2 attempt(s)" in md
@@ -205,3 +205,46 @@ def test_resume_runs_only_missing_attempts(toy_task, local_runner, tmp_path):
     assert data["attempts"][0] == first  # kept, not re-run
     assert len(client.messages.requests) == 2  # only attempts 2 and 3 called the model
     assert data["meta"]["resumed_at"]
+
+
+def test_trajectory_stats_count_unknown_tools():
+    from htt.attempt import trajectory_stats
+
+    events = [
+        {
+            "role": "assistant",
+            "blocks": [
+                {"type": "thinking", "thinking": ""},
+                {"type": "tool_use", "name": "bash", "input": {}},
+                {"type": "tool_use", "name": "read_file", "input": {"path": "x"}},
+            ],
+        },
+        {
+            "role": "tool",
+            "results": [
+                {"name": "bash", "is_error": True, "content": "unknown tool: bash"},
+                {"name": "read_file", "is_error": False, "content": "..."},
+            ],
+        },
+    ]
+    assert trajectory_stats(events) == {"tool_calls": 2, "tool_errors": 1, "unknown_tool_calls": 1}
+
+
+def test_diff_flags(toy_task):
+    from htt.attempt import diff_flags
+
+    src = "diff --git a/toylib/stats.py b/toylib/stats.py\n+    import pytest\n"
+    test = "diff --git a/tests/test_new.py b/tests/test_new.py\n+def test_x(): pass\n"
+    log = "diff --git a/CHANGELOG.rst b/CHANGELOG.rst\n+* fix\n"
+    other = "diff --git a/setup.py b/setup.py\n+x\n"
+    assert diff_flags(toy_task, src, 1) == [
+        "no_tests_added",
+        "no_changelog",
+        "suspicious_terms_in_source",
+    ]
+    assert diff_flags(toy_task, src + test + log, 1) == [
+        "changed_test_files",
+        "suspicious_terms_in_source",
+    ]
+    assert "changed_outside_source:setup.py" in diff_flags(toy_task, other, 0)
+    assert diff_flags(toy_task, "", 0) == ["never_ran_visible_tests", "no_changes"]

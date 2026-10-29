@@ -56,6 +56,10 @@ def summarize(attempts: list[dict]) -> dict:
             "mean_turns": round(sum(a["turns"] for a in rows) / n, 1) if n else None,
             "mean_test_runs": round(sum(a["test_runs"] for a in rows) / n, 1) if n else None,
             "mean_solve_s": round(sum(a["solve_s"] for a in rows) / n, 1) if n else None,
+            "unknown_tool_calls": sum(a.get("unknown_tool_calls", 0) for a in rows + errors),
+            "attempts_with_tests_added": sum(
+                1 for a in rows if "changed_test_files" in (a.get("flags") or [])
+            ),
             "stops": dict(Counter(a["stop"] for a in rows)),
             "most_failed_hidden_tests": failed_tests.most_common(8),
         }
@@ -120,8 +124,8 @@ def render_markdown(meta: dict, attempts: list[dict], summary: dict) -> str:
         "## Results by task",
         "",
         "| Task | Kind | Resolved | Pass rate | Mean fail-to-pass passed | Mean cost | "
-        "Mean turns | Mean test runs | Stops |",
-        "|---|---|---|---|---|---|---|---|---|",
+        "Mean turns | Mean test runs | Added tests | Calls to unknown tools | Stops |",
+        "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for task_id, s in summary["per_task"].items():
         stops = ", ".join(f"{k} x{v}" for k, v in s["stops"].items())
@@ -129,7 +133,9 @@ def render_markdown(meta: dict, attempts: list[dict], summary: dict) -> str:
         lines.append(
             f"| {task_id} | {s['kind']} | {s['resolved']}/{s['attempts']} | "
             f"{_pct(s['pass_rate'])} | {_pct(s['mean_fail_to_pass_fraction'])} | "
-            f"{mean_cost} | {s['mean_turns']} | {s['mean_test_runs']} | {stops} |"
+            f"{mean_cost} | {s['mean_turns']} | {s['mean_test_runs']} | "
+            f"{s.get('attempts_with_tests_added', 0)}/{s['attempts']} | "
+            f"{s.get('unknown_tool_calls', 0)} | {stops} |"
         )
     lines += [
         "",
@@ -187,6 +193,30 @@ def write_report(out_dir: Path, meta: dict, attempts: list[Any]) -> Path:
     return md
 
 
-def rebuild_report(run_dir: Path) -> Path:
+def recompute_signals(run_dir: Path, attempt: dict) -> dict:
+    """Recompute reviewer flags and tool stats from the stored diff and trajectory,
+    so older runs get signals added after they ran. Grades are never touched."""
+    from htt.attempt import diff_flags, trajectory_stats
+    from htt.tasks import load_task
+
+    if attempt.get("status") == "skipped":
+        return attempt
+    diff_path = run_dir / attempt.get("diff_file", "")
+    traj_path = run_dir / attempt.get("trajectory_file", "")
+    if diff_path.is_file():
+        task = load_task(attempt["task_id"])
+        attempt["flags"] = diff_flags(
+            task, diff_path.read_text(encoding="utf-8"), attempt.get("test_runs", 0)
+        )
+    if traj_path.is_file():
+        events = json.loads(traj_path.read_text(encoding="utf-8")).get("events", [])
+        attempt.update(trajectory_stats(events))
+    return attempt
+
+
+def rebuild_report(run_dir: Path, recompute: bool = False) -> Path:
     data = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
-    return write_report(run_dir, data["meta"], data["attempts"])
+    attempts = data["attempts"]
+    if recompute:
+        attempts = [recompute_signals(run_dir, a) for a in attempts]
+    return write_report(run_dir, data["meta"], attempts)

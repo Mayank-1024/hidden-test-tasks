@@ -37,6 +37,8 @@
         "mean_turns": 9.0,
         "mean_test_runs": 2.0,
         "mean_solve_s": 54.4,
+        "unknown_tool_calls": 0,
+        "attempts_with_tests_added": 0,
         "stops": {
           "end_turn": 1
         },
@@ -55,6 +57,8 @@
         "mean_turns": 5.0,
         "mean_test_runs": 1.0,
         "mean_solve_s": 25.7,
+        "unknown_tool_calls": 1,
+        "attempts_with_tests_added": 0,
         "stops": {
           "end_turn": 1
         },
@@ -153,10 +157,16 @@
       ],
       "lines_added": 93,
       "lines_removed": 11,
-      "flags": [],
+      "flags": [
+        "no_tests_added",
+        "no_changelog"
+      ],
       "final_text": "I added `let` expressions and `$name` variable references. The 991 visible tests still pass, but I did not add tests for the new syntax or run any `let` queries, so none of it has been exercised yet.\n\n- **Lexer:** `$name` is now a `variable` token. A `$` with no name after it, or with whitespace between `$` and the name, raises `LexerError`. A lone `=` is now an `assign` token instead of a lexer error. `foo = bar` still fails at compile time, now as a `ParseError` (\"Unexpected token\") rather than a `LexerError`.\n- **Parser:** `let` starts a let expression only when the next token is a variable reference, so `let` and `in` still work as field names.\n  - Each binding expression stops at the next top-level `,` or `in`, and the body extends as far right as possible.\n  - A missing `in`, a missing `=`, or a body that ends right after `in` raises `ParseError`, or `IncompleteExpressionError` at end of input.\n- **Evaluation:**\n  - Each search keeps its own set of variables, so nothing leaks between searches of the same compiled expression.\n  - All of a let's bindings are evaluated in the enclosing scope before the body runs, and an inner `let` shadows only inside its own body.\n  - A variable bound to `null` returns `null`. An unbound variable raises the new `UndefinedVariableError` (a `JMESPathError` subclass) when you call `search`, not when you compile.\n  - An `&expr` reference records the variables in scope where it is written, and restores them when `sort_by`, `max_by`, `map` and the like evaluate it.\n\nThe changes are in `lexer.py`, `parser.py`, `ast.py`, `visitor.py` and `exceptions.py`.",
       "diff_file": "diffs/let-expressions-01.diff",
-      "trajectory_file": "trajectories/let-expressions-01.json"
+      "trajectory_file": "trajectories/let-expressions-01.json",
+      "tool_calls": 23,
+      "tool_errors": 1,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "types-module",
@@ -238,10 +248,16 @@
       ],
       "lines_added": 57,
       "lines_removed": 56,
-      "flags": [],
+      "flags": [
+        "no_tests_added",
+        "no_changelog"
+      ],
       "final_text": "I added `jmespath/types.py` and switched `functions.py` and `visitor.py` over to it. The visible suite passes (991 passed, 1 skipped). I didn't write extra tests for the odd inputs the task lists (`Decimal`, `Fraction`, tuples, subclasses of `dict`, `list`, `str` and `int`).\n\n- **`jmespath/types.py`**: it holds `TYPES_MAP` and `REVERSE_TYPES_MAP` (moved unchanged) plus three functions:\n  - `jmespath_type(value)` looks up `type(value).__name__` in `TYPES_MAP` and returns `\"unknown\"` if it isn't there. That is the same lookup the type checker does today.\n  - `is_number(value)` is false for `bool` and otherwise true for any `numbers.Number`.\n  - `is_comparable(value)` is true for a number or a `str`.\n  - It imports only `numbers`, nothing from `jmespath`.\n- **`functions.py`**: it no longer defines the two tables. It imports them from `jmespath.types`, so `from jmespath.functions import TYPES_MAP, REVERSE_TYPES_MAP` still works and gives the same objects.\n- **`Functions._convert_to_jmespath_type`**: I left it as it was. It takes a type name, not a value, and subclasses may override it. The internal calls still go through it.\n- **`visitor.py`**: I removed `_is_comparable` and `_is_actual_number` and replaced their uses with `is_comparable` and `is_number`. I also deleted an unused `num_types` variable in `visit_comparator`.",
       "diff_file": "diffs/types-module-01.diff",
-      "trajectory_file": "trajectories/types-module-01.json"
+      "trajectory_file": "trajectories/types-module-01.json",
+      "tool_calls": 14,
+      "tool_errors": 1,
+      "unknown_tool_calls": 1
     }
   ]
 }

@@ -9,9 +9,9 @@
 
 ## Results by task
 
-| Task | Kind | Resolved | Pass rate | Mean fail-to-pass passed | Mean cost | Mean turns | Mean test runs | Stops |
-|---|---|---|---|---|---|---|---|---|
-| mixed-type-ordering | bugfix | 1/1 | 100% | 100% | $0.056 | 4.0 | 1.0 | end_turn x1 |
+| Task | Kind | Resolved | Pass rate | Mean fail-to-pass passed | Mean cost | Mean turns | Mean test runs | Added tests | Calls to unknown tools | Stops |
+|---|---|---|---|---|---|---|---|---|---|---|
+| mixed-type-ordering | bugfix | 1/1 | 100% | 100% | $0.056 | 4.0 | 1.0 | 0/1 | 0 | end_turn x1 |
 
 **Total:** 1/1 graded attempts resolved. Spend $0.06 (all attempts). Tokens: 10 input, 13,440 cache write, 20,842 cache read, 1,787 output, over 4 model calls. Solver wall time 0.3 min.
 
@@ -19,6 +19,6 @@
 
 | Attempt | Resolved | Fail-to-pass | Pass-to-pass | Visible | Stop | Turns | Test runs | Cost | Lines +/- | Flags |
 |---|---|---|---|---|---|---|---|---|---|---|
-| [mixed-type-ordering #1](trajectories/mixed-type-ordering-01.json) | yes | 24/24 | 34/34 | 991/992 (1 skipped) | end_turn | 4 | 1 | $0.056 | +12/-2 | - |
+| [mixed-type-ordering #1](trajectories/mixed-type-ordering-01.json) | yes | 24/24 | 34/34 | 991/992 (1 skipped) | end_turn | 4 | 1 | $0.056 | +12/-2 | no_tests_added, no_changelog |
 
 ## Hidden tests that failed most often

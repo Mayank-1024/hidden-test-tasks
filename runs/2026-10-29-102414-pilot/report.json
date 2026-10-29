@@ -36,6 +36,8 @@
         "mean_turns": 4.0,
         "mean_test_runs": 1.0,
         "mean_solve_s": 18.0,
+        "unknown_tool_calls": 0,
+        "attempts_with_tests_added": 0,
         "stops": {
           "end_turn": 1
         },
@@ -120,10 +122,16 @@
       ],
       "lines_added": 12,
       "lines_removed": 2,
-      "flags": [],
+      "flags": [
+        "no_tests_added",
+        "no_changelog"
+      ],
       "final_text": "The crash came from two places that let Python compare a string with a number. I fixed both, and the visible test suite passes.\n\n**Root cause**\n- **Comparators:** `visit_comparator` in `jmespath/visitor.py` treated \"string or number\" as one comparable class. A string on one side and a number on the other went straight to Python's `<`, `>`, `<=` or `>=`, which raised `TypeError`.\n- **`min_by` / `max_by`:** the key function in `jmespath/functions.py` checked each key on its own, so a string key and a number key both passed. Python then raised `TypeError` when it compared them.\n\n**Fix**\n- **Comparators:** ordering comparisons now run only when both sides are numbers or both are strings. Any other pair returns `null`, so your filter skips the `\"unknown\"` record and returns `[\"a\"]`. Equality, the rule that booleans aren't numbers, and number-vs-number and string-vs-string results are unchanged.\n- **`min_by` / `max_by`:** the key function now remembers the type of the first key. If a later key is a different type, it raises `JMESPathTypeError`.\n- **`sort_by`, `sort`, `min` and `max`:** these already raised `JMESPathTypeError` on mixed types, so I left them alone.\n- **Custom functions:** I didn't add any `try/except TypeError`, so exceptions from custom functions still propagate unchanged.\n\nI didn't add new tests for the mixed string/number cases, so those paths are only covered by my reading of the code and the existing suite.",
       "diff_file": "diffs/mixed-type-ordering-01.diff",
-      "trajectory_file": "trajectories/mixed-type-ordering-01.json"
+      "trajectory_file": "trajectories/mixed-type-ordering-01.json",
+      "tool_calls": 6,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     }
   ]
 }

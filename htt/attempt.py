@@ -20,7 +20,7 @@ from pathlib import Path
 from htt.grading import grade_tree
 from htt.report import write_report
 from htt.runner import Runner
-from htt.sandbox import Sandbox
+from htt.sandbox import TOOL_DEFINITIONS, Sandbox
 from htt.solver import SolveConfig, Solver, make_solver
 from htt.tasks import REPO_ROOT, VISIBLE_TESTS_DIR, Task
 from htt.verify import DOC_FILE
@@ -62,16 +62,41 @@ class AttemptResult:
     diff_file: str = ""
     trajectory_file: str = ""
     fatal: bool = False
+    tool_calls: int = 0
+    tool_errors: int = 0
+    unknown_tool_calls: int = 0
 
     def to_dict(self) -> dict:
         return asdict(self)
 
 
+KNOWN_TOOLS = {t["name"] for t in TOOL_DEFINITIONS}
+
+
+def trajectory_stats(events: list[dict]) -> dict:
+    """Tool-call counts from a trajectory, including calls to tools that do not exist."""
+    calls = errors = unknown = 0
+    for event in events:
+        if event.get("role") == "assistant":
+            for block in event.get("blocks", []):
+                if block.get("type") == "tool_use":
+                    calls += 1
+                    unknown += block.get("name") not in KNOWN_TOOLS
+        elif event.get("role") == "tool":
+            errors += sum(1 for r in event.get("results", []) if r.get("is_error"))
+    return {"tool_calls": calls, "tool_errors": errors, "unknown_tool_calls": unknown}
+
+
 def diff_flags(task: Task, diff: str, test_runs: int) -> list[str]:
+    """Signals for a reviewer. Not part of the grade; see each task's rubric.md."""
     files = changed_files(diff)
     flags = []
     if any(f.startswith(f"{VISIBLE_TESTS_DIR}/") for f in files):
-        flags.append("touched_visible_tests")
+        flags.append("changed_test_files")
+    elif files:
+        flags.append("no_tests_added")
+    if files and not any(DOC_FILE.match(f) for f in files):
+        flags.append("no_changelog")
     outside = [
         f
         for f in files
@@ -174,6 +199,7 @@ def run_attempt(
             final_text=outcome.final_text[:2000],
             diff_file=f"diffs/{stem}.diff",
             trajectory_file=f"trajectories/{stem}.json",
+            **trajectory_stats(outcome.trajectory),
         )
     finally:
         shutil.rmtree(tmp, ignore_errors=True)

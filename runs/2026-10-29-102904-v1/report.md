@@ -10,11 +10,11 @@
 
 ## Results by task
 
-| Task | Kind | Resolved | Pass rate | Mean fail-to-pass passed | Mean cost | Mean turns | Mean test runs | Stops |
-|---|---|---|---|---|---|---|---|---|
-| let-expressions | feature | 1/1 | 100% | 100% | $0.160 | 11.0 | 2.0 | end_turn x1 |
-| mixed-type-ordering | bugfix | 1/1 | 100% | 100% | $0.054 | 4.0 | 1.0 | end_turn x1 |
-| types-module | refactor | 1/1 | 100% | 100% | $0.092 | 9.0 | 1.0 | end_turn x1 |
+| Task | Kind | Resolved | Pass rate | Mean fail-to-pass passed | Mean cost | Mean turns | Mean test runs | Added tests | Calls to unknown tools | Stops |
+|---|---|---|---|---|---|---|---|---|---|---|
+| let-expressions | feature | 1/1 | 100% | 100% | $0.160 | 11.0 | 2.0 | 0/1 | 3 | end_turn x1 |
+| mixed-type-ordering | bugfix | 1/1 | 100% | 100% | $0.054 | 4.0 | 1.0 | 0/1 | 0 | end_turn x1 |
+| types-module | refactor | 1/1 | 100% | 100% | $0.092 | 9.0 | 1.0 | 0/1 | 2 | end_turn x1 |
 
 **Total:** 3/3 graded attempts resolved, 12 cut short by an API error (not scored). Spend $0.39 (all attempts). Tokens: 66 input, 60,066 cache write, 457,033 cache read, 14,943 output, over 29 model calls. Solver wall time 2.5 min.
 
@@ -22,10 +22,10 @@
 
 | Attempt | Resolved | Fail-to-pass | Pass-to-pass | Visible | Stop | Turns | Test runs | Cost | Lines +/- | Flags |
 |---|---|---|---|---|---|---|---|---|---|---|
-| [let-expressions #1](trajectories/let-expressions-01.json) | yes | 35/35 | 29/29 | 991/992 (1 skipped) | end_turn | 11 | 2 | $0.160 | +90/-7 | - |
-| [mixed-type-ordering #1](trajectories/mixed-type-ordering-01.json) | yes | 24/24 | 34/34 | 991/992 (1 skipped) | end_turn | 4 | 1 | $0.054 | +13/-3 | - |
-| [types-module #1](trajectories/types-module-01.json) | yes | 41/41 | 756/756 | 991/992 (1 skipped) | end_turn | 9 | 1 | $0.092 | +54/-55 | - |
-| [let-expressions #2](trajectories/let-expressions-02.json) | API error | 0/35 | 22/29 | 990/992 (1 skipped) | api_error: BadRequestError: Error code: 400 - {'type': 'e... | 5 | 0 | $0.085 | +58/-8 | never_ran_visible_tests |
+| [let-expressions #1](trajectories/let-expressions-01.json) | yes | 35/35 | 29/29 | 991/992 (1 skipped) | end_turn | 11 | 2 | $0.160 | +90/-7 | no_tests_added, no_changelog |
+| [mixed-type-ordering #1](trajectories/mixed-type-ordering-01.json) | yes | 24/24 | 34/34 | 991/992 (1 skipped) | end_turn | 4 | 1 | $0.054 | +13/-3 | no_tests_added, no_changelog |
+| [types-module #1](trajectories/types-module-01.json) | yes | 41/41 | 756/756 | 991/992 (1 skipped) | end_turn | 9 | 1 | $0.092 | +54/-55 | no_tests_added, no_changelog |
+| [let-expressions #2](trajectories/let-expressions-02.json) | API error | 0/35 | 22/29 | 990/992 (1 skipped) | api_error: BadRequestError: Error code: 400 - {'type': 'e... | 5 | 0 | $0.085 | +58/-8 | no_tests_added, no_changelog, never_ran_visible_tests |
 | [mixed-type-ordering #2](trajectories/mixed-type-ordering-02.json) | API error | 0/24 | 34/34 | 991/992 (1 skipped) | api_error: BadRequestError: Error code: 400 - {'type': 'e... | 0 | 0 | $0.000 | +0/-0 | never_ran_visible_tests, no_changes |
 | [types-module #2](trajectories/types-module-02.json) | API error | 0/41 | 756/756 | 991/992 (1 skipped) | api_error: BadRequestError: Error code: 400 - {'type': 'e... | 0 | 0 | $0.000 | +0/-0 | never_ran_visible_tests, no_changes |
 | [let-expressions #3](trajectories/let-expressions-03.json) | API error | 0/35 | 29/29 | 991/992 (1 skipped) | api_error: BadRequestError: Error code: 400 - {'type': 'e... | 0 | 0 | $0.000 | +0/-0 | never_ran_visible_tests, no_changes |

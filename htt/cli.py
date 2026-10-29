@@ -67,7 +67,7 @@ def cmd_solve(args: argparse.Namespace) -> int:
 def cmd_report(args: argparse.Namespace) -> int:
     from htt.report import rebuild_report
 
-    path = rebuild_report(Path(args.run_dir))
+    path = rebuild_report(Path(args.run_dir), recompute=args.recompute)
     print(path.read_text(encoding="utf-8"))
     return 0
 
@@ -125,6 +125,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     r = sub.add_parser("report", help="rebuild report.md/report.json for a run directory")
     r.add_argument("run_dir")
+    r.add_argument(
+        "--recompute",
+        action="store_true",
+        help="recompute reviewer flags and tool stats from stored diffs/trajectories",
+    )
     r.set_defaults(func=cmd_report)
 
     e = sub.add_parser("estimate", help="estimate the cost of a full run from past attempts")

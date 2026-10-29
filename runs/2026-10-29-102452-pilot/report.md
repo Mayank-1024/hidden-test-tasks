@@ -9,10 +9,10 @@
 
 ## Results by task
 
-| Task | Kind | Resolved | Pass rate | Mean fail-to-pass passed | Mean cost | Mean turns | Mean test runs | Stops |
-|---|---|---|---|---|---|---|---|---|
-| let-expressions | feature | 1/1 | 100% | 100% | $0.189 | 9.0 | 2.0 | end_turn x1 |
-| types-module | refactor | 1/1 | 100% | 100% | $0.077 | 5.0 | 1.0 | end_turn x1 |
+| Task | Kind | Resolved | Pass rate | Mean fail-to-pass passed | Mean cost | Mean turns | Mean test runs | Added tests | Calls to unknown tools | Stops |
+|---|---|---|---|---|---|---|---|---|---|---|
+| let-expressions | feature | 1/1 | 100% | 100% | $0.189 | 9.0 | 2.0 | 0/1 | 0 | end_turn x1 |
+| types-module | refactor | 1/1 | 100% | 100% | $0.077 | 5.0 | 1.0 | 0/1 | 1 | end_turn x1 |
 
 **Total:** 2/2 graded attempts resolved. Spend $0.27 (all attempts). Tokens: 32 input, 51,097 cache write, 236,464 cache read, 9,053 output, over 14 model calls. Solver wall time 1.3 min.
 
@@ -20,7 +20,7 @@
 
 | Attempt | Resolved | Fail-to-pass | Pass-to-pass | Visible | Stop | Turns | Test runs | Cost | Lines +/- | Flags |
 |---|---|---|---|---|---|---|---|---|---|---|
-| [let-expressions #1](trajectories/let-expressions-01.json) | yes | 35/35 | 29/29 | 991/992 (1 skipped) | end_turn | 9 | 2 | $0.189 | +93/-11 | - |
-| [types-module #1](trajectories/types-module-01.json) | yes | 41/41 | 756/756 | 991/992 (1 skipped) | end_turn | 5 | 1 | $0.077 | +57/-56 | - |
+| [let-expressions #1](trajectories/let-expressions-01.json) | yes | 35/35 | 29/29 | 991/992 (1 skipped) | end_turn | 9 | 2 | $0.189 | +93/-11 | no_tests_added, no_changelog |
+| [types-module #1](trajectories/types-module-01.json) | yes | 41/41 | 756/756 | 991/992 (1 skipped) | end_turn | 5 | 1 | $0.077 | +57/-56 | no_tests_added, no_changelog |
 
 ## Hidden tests that failed most often

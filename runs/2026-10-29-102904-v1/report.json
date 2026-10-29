@@ -38,6 +38,8 @@
         "mean_turns": 11.0,
         "mean_test_runs": 2.0,
         "mean_solve_s": 60.3,
+        "unknown_tool_calls": 3,
+        "attempts_with_tests_added": 0,
         "stops": {
           "end_turn": 1
         },
@@ -56,6 +58,8 @@
         "mean_turns": 4.0,
         "mean_test_runs": 1.0,
         "mean_solve_s": 18.2,
+        "unknown_tool_calls": 0,
+        "attempts_with_tests_added": 0,
         "stops": {
           "end_turn": 1
         },
@@ -74,6 +78,8 @@
         "mean_turns": 9.0,
         "mean_test_runs": 1.0,
         "mean_solve_s": 37.1,
+        "unknown_tool_calls": 2,
+        "attempts_with_tests_added": 0,
         "stops": {
           "end_turn": 1
         },
@@ -172,10 +178,16 @@
       ],
       "lines_added": 90,
       "lines_removed": 7,
-      "flags": [],
+      "flags": [
+        "no_tests_added",
+        "no_changelog"
+      ],
       "final_text": "I added `let` expressions and `$name` variable references. The existing suite still passes (991 passed, 1 skipped). I didn't add tests for `let` itself, so the new behaviour hasn't been run.\n\n- **Lexer:** `$name` is now a `variable` token. A `$` with no valid name after it, including `$ x`, raises `LexerError`. A lone `=` is now an `assign` token instead of a lexer error, because bindings need it.\n- **Parser:** `let` starts a let expression only when the next token is a variable, so `let`, `in`, `foo.let` and `{let: a, in: b}` still work as field names. Bindings are separated by commas and end at the next top-level `,` or `in`. The body is parsed as far to the right as possible. A bare `foo = bar` still fails at compile time, now as a `ParseError` for the unexpected token. Malformed forms (missing `in`, missing `=`, nothing after `in`) raise `ParseError` or `IncompleteExpressionError`.\n- **AST and exceptions:** there are two new node types, `variable_ref` and `let_expression`. `UndefinedVariableError` is a new subclass of `JMESPathError`.\n- **Evaluation:** a let expression evaluates its bindings in the enclosing scope, so they can't see each other. It then evaluates the body with a copy of that scope plus the new names, and restores the old scope afterwards. Inner bindings shadow outer ones only inside the inner body. A variable bound to `null` returns `null`, and an unknown one raises `UndefinedVariableError` at `search` time.\n- **Expression references:** `&expr` captures the scope where it is written, and evaluates under that scope later. This keeps `sort_by`, `max_by` and `map` working, and custom functions too, since the `expref.visit(...)` signature is unchanged.\n- **No leakage between searches:** the scope lives on the per-search interpreter, not on the compiled expression, so variables can't carry over between searches.\n\nThe changes are in `jmespath/lexer.py`, `parser.py`, `ast.py`, `visitor.py` and `exceptions.py`.",
       "diff_file": "diffs/let-expressions-01.diff",
-      "trajectory_file": "trajectories/let-expressions-01.json"
+      "trajectory_file": "trajectories/let-expressions-01.json",
+      "tool_calls": 25,
+      "tool_errors": 3,
+      "unknown_tool_calls": 2
     },
     {
       "task_id": "mixed-type-ordering",
@@ -239,10 +251,16 @@
       ],
       "lines_added": 13,
       "lines_removed": 3,
-      "flags": [],
+      "flags": [
+        "no_tests_added",
+        "no_changelog"
+      ],
       "final_text": "The crash is fixed. `people[?age > `30`].name` should now return `[\"a\"]` on your data, and the visible tests pass (991 passed, 1 skipped). I didn't run your exact query or add tests for the new cases, so those paths are untested.\n\n**Root cause:** the ordering operators let any string or number through (`_is_comparable`) and handed the pair straight to Python's `<`, `>`, `<=` and `>=`. A string against a number therefore raised a raw `TypeError`. `min_by` and `max_by` had the same gap. Their key function accepted numbers and strings individually, but `min`/`max` then compared a mix.\n\n**Fix:**\n- **Comparators (`jmespath/visitor.py`):** an ordering comparison now runs only when both sides are real numbers or both are strings. Any other pair, including a string against a number in either order, returns `null`, so a filter skips the element. Booleans still don't count as numbers, and `==` and `!=` are unchanged.\n- **`min_by` / `max_by` (`jmespath/functions.py`):** the key function now remembers the type of the first key. If a later key is a different type, it raises `JMESPathTypeError`.\n- **Other functions:** `sort_by` already checked types, and `max`, `min` and `sort` already check array element types. I left them alone, so they keep raising `JMESPathTypeError`.\n- **Custom functions:** I didn't wrap anything in a blanket `except TypeError`, so errors from custom functions propagate with their original type.",
       "diff_file": "diffs/mixed-type-ordering-01.diff",
-      "trajectory_file": "trajectories/mixed-type-ordering-01.json"
+      "trajectory_file": "trajectories/mixed-type-ordering-01.json",
+      "tool_calls": 6,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "types-module",
@@ -324,10 +342,16 @@
       ],
       "lines_added": 54,
       "lines_removed": 55,
-      "flags": [],
+      "flags": [
+        "no_tests_added",
+        "no_changelog"
+      ],
       "final_text": "I added `jmespath/types.py` and switched `functions.py` and `visitor.py` over to it. The visible suite passes: 991 passed, 1 skipped. I didn't write extra tests for the non-JSON inputs the task lists (`Decimal`, `Fraction`, tuples, subclasses).\n\n- **`types.py`**:\n  - `TYPES_MAP` and `REVERSE_TYPES_MAP` are moved over unchanged.\n  - `jmespath_type(value)` returns `TYPES_MAP.get(type(value).__name__, 'unknown')`. It looks up the type's name, as the type checker does today, so a subclass with a different class name gives `\"unknown\"`.\n  - `is_number` and `is_comparable` have the same logic as the old private helpers: `bool` is not a number, and strings are comparable.\n  - The module imports only `numbers`, nothing from `jmespath`.\n- **`functions.py`**: the two tables are no longer defined there. It does `from jmespath.types import TYPES_MAP, REVERSE_TYPES_MAP`, so importing them from `jmespath.functions` still works and gives the same objects.\n- **`Functions._convert_to_jmespath_type`**: unchanged. It still takes a Python type name and looks it up in `TYPES_MAP`.\n- **`visitor.py`**: `_is_actual_number` and `_is_comparable` are deleted. The equality special-case, ordering comparisons and `!` now call `is_number` and `is_comparable`.\n\n`functions.py` doesn't call `jmespath_type` itself. Its type checker still works from type-name strings, so error messages and results are the same as before.",
       "diff_file": "diffs/types-module-01.diff",
-      "trajectory_file": "trajectories/types-module-01.json"
+      "trajectory_file": "trajectories/types-module-01.json",
+      "tool_calls": 19,
+      "tool_errors": 4,
+      "unknown_tool_calls": 2
     },
     {
       "task_id": "let-expressions",
@@ -415,12 +439,17 @@
       "lines_added": 58,
       "lines_removed": 8,
       "flags": [
+        "no_tests_added",
+        "no_changelog",
         "never_ran_visible_tests"
       ],
       "final_text": "",
       "diff_file": "diffs/let-expressions-02.diff",
       "trajectory_file": "trajectories/let-expressions-02.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 17,
+      "tool_errors": 1,
+      "unknown_tool_calls": 1
     },
     {
       "task_id": "mixed-type-ordering",
@@ -488,7 +517,10 @@
       "final_text": "",
       "diff_file": "diffs/mixed-type-ordering-02.diff",
       "trajectory_file": "trajectories/mixed-type-ordering-02.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "types-module",
@@ -573,7 +605,10 @@
       "final_text": "",
       "diff_file": "diffs/types-module-02.diff",
       "trajectory_file": "trajectories/types-module-02.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "let-expressions",
@@ -652,7 +687,10 @@
       "final_text": "",
       "diff_file": "diffs/let-expressions-03.diff",
       "trajectory_file": "trajectories/let-expressions-03.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "mixed-type-ordering",
@@ -720,7 +758,10 @@
       "final_text": "",
       "diff_file": "diffs/mixed-type-ordering-03.diff",
       "trajectory_file": "trajectories/mixed-type-ordering-03.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "types-module",
@@ -805,7 +846,10 @@
       "final_text": "",
       "diff_file": "diffs/types-module-03.diff",
       "trajectory_file": "trajectories/types-module-03.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "let-expressions",
@@ -884,7 +928,10 @@
       "final_text": "",
       "diff_file": "diffs/let-expressions-04.diff",
       "trajectory_file": "trajectories/let-expressions-04.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "mixed-type-ordering",
@@ -952,7 +999,10 @@
       "final_text": "",
       "diff_file": "diffs/mixed-type-ordering-04.diff",
       "trajectory_file": "trajectories/mixed-type-ordering-04.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "types-module",
@@ -1037,7 +1087,10 @@
       "final_text": "",
       "diff_file": "diffs/types-module-04.diff",
       "trajectory_file": "trajectories/types-module-04.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "let-expressions",
@@ -1116,7 +1169,10 @@
       "final_text": "",
       "diff_file": "diffs/let-expressions-05.diff",
       "trajectory_file": "trajectories/let-expressions-05.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "mixed-type-ordering",
@@ -1184,7 +1240,10 @@
       "final_text": "",
       "diff_file": "diffs/mixed-type-ordering-05.diff",
       "trajectory_file": "trajectories/mixed-type-ordering-05.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     },
     {
       "task_id": "types-module",
@@ -1269,7 +1328,10 @@
       "final_text": "",
       "diff_file": "diffs/types-module-05.diff",
       "trajectory_file": "trajectories/types-module-05.json",
-      "fatal": true
+      "fatal": true,
+      "tool_calls": 0,
+      "tool_errors": 0,
+      "unknown_tool_calls": 0
     }
   ]
 }

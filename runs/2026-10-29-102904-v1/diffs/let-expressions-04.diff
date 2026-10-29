@@ -1,0 +1,183 @@
+diff --git a/jmespath/ast.py b/jmespath/ast.py
+--- a/jmespath/ast.py
++++ b/jmespath/ast.py
+@@ -12,6 +12,15 @@
+ 
+ def expref(expression):
+     return {'type': 'expref', 'children': [expression]}
++
++
++def variable_ref(name):
++    return {'type': 'variable_ref', 'children': [], 'value': name}
++
++
++def let_expression(names, expressions, body):
++    return {'type': 'let', 'children': list(expressions) + [body],
++            'value': list(names)}
+ 
+ 
+ def function_expression(name, args):
+diff --git a/jmespath/exceptions.py b/jmespath/exceptions.py
+--- a/jmespath/exceptions.py
++++ b/jmespath/exceptions.py
+@@ -118,5 +118,12 @@
+             "Invalid JMESPath expression: cannot be empty.")
+ 
+ 
++class UndefinedVariableError(JMESPathError):
++    def __init__(self, name):
++        super(UndefinedVariableError, self).__init__(
++            "Undefined variable: $%s" % name)
++        self.variable_name = name
++
++
+ class UnknownFunctionError(JMESPathError):
+     pass
+diff --git a/jmespath/lexer.py b/jmespath/lexer.py
+--- a/jmespath/lexer.py
++++ b/jmespath/lexer.py
+@@ -86,23 +86,26 @@
+                 yield self._match_or_else('=', 'gte', 'gt')
+             elif self._current == '!':
+                 yield self._match_or_else('=', 'ne', 'not')
++            elif self._current == '$':
++                start = self._position
++                if self._next() not in self.START_IDENTIFIER:
++                    raise LexerError(lexer_position=start,
++                                     lexer_value='$',
++                                     message="Expected variable name after $")
++                buff = self._current
++                while self._next() in self.VALID_IDENTIFIER:
++                    buff += self._current
++                yield {'type': 'variable', 'value': buff,
++                       'start': start, 'end': start + len(buff) + 1}
+             elif self._current == '=':
++                start = self._position
+                 if self._next() == '=':
+                     yield {'type': 'eq', 'value': '==',
+                         'start': self._position - 1, 'end': self._position}
+                     self._next()
+                 else:
+-                    if self._current is None:
+-                        # If we're at the EOF, we never advanced
+-                        # the position so we don't need to rewind
+-                        # it back one location.
+-                        position = self._position
+-                    else:
+-                        position = self._position - 1
+-                    raise LexerError(
+-                        lexer_position=position,
+-                        lexer_value='=',
+-                        message="Unknown token '='")
++                    yield {'type': 'assign', 'value': '=',
++                           'start': start, 'end': start + 1}
+             else:
+                 raise LexerError(lexer_position=self._position,
+                                  lexer_value=self._current,
+diff --git a/jmespath/parser.py b/jmespath/parser.py
+--- a/jmespath/parser.py
++++ b/jmespath/parser.py
+@@ -46,6 +46,8 @@
+         'current': 0,
+         'expref': 0,
+         'colon': 0,
++        'variable': 0,
++        'assign': 0,
+         'pipe': 1,
+         'or': 2,
+         'and': 3,
+@@ -149,7 +151,32 @@
+         return ast.literal(token['value'])
+ 
+     def _token_nud_unquoted_identifier(self, token):
++        if token['value'] == 'let' and self._current_token() == 'variable':
++            return self._parse_let()
+         return ast.field(token['value'])
++
++    def _token_nud_variable(self, token):
++        return ast.variable_ref(token['value'])
++
++    def _parse_let(self):
++        names = []
++        expressions = []
++        while True:
++            var = self._lookahead_token(0)
++            self._match('variable')
++            self._match('assign')
++            expressions.append(self._expression(0))
++            names.append(var['value'])
++            if self._current_token() == 'comma':
++                self._advance()
++                continue
++            break
++        tok = self._lookahead_token(0)
++        if tok['type'] != 'unquoted_identifier' or tok['value'] != 'in':
++            self._raise_parse_error_maybe_eof("'in'", tok)
++        self._advance()
++        body = self._expression(0)
++        return ast.let_expression(names, expressions, body)
+ 
+     def _token_nud_quoted_identifier(self, token):
+         field = ast.field(token['value'])
+diff --git a/jmespath/visitor.py b/jmespath/visitor.py
+--- a/jmespath/visitor.py
++++ b/jmespath/visitor.py
+@@ -1,5 +1,6 @@
+ import operator
+ 
++from jmespath import exceptions
+ from jmespath import functions
+ from jmespath.compat import string_type
+ from numbers import Number
+@@ -76,8 +77,16 @@
+         self.expression = expression
+         self.interpreter = interpreter
+ 
++        self.scope = interpreter._scope
++
+     def visit(self, node, *args, **kwargs):
+-        return self.interpreter.visit(node, *args, **kwargs)
++        interp = self.interpreter
++        saved = interp._scope
++        interp._scope = self.scope
++        try:
++            return interp.visit(node, *args, **kwargs)
++        finally:
++            interp._scope = saved
+ 
+ 
+ class Visitor(object):
+@@ -115,6 +124,7 @@
+         if options is None:
+             options = Options()
+         self._options = options
++        self._scope = {}
+         if options.dict_cls is not None:
+             self._dict_cls = self._options.dict_cls
+         if options.custom_functions is not None:
+@@ -124,6 +134,25 @@
+ 
+     def default_visit(self, node, *args, **kwargs):
+         raise NotImplementedError(node['type'])
++
++    def visit_variable_ref(self, node, value):
++        name = node['value']
++        try:
++            return self._scope[name]
++        except KeyError:
++            raise exceptions.UndefinedVariableError(name)
++
++    def visit_let(self, node, value):
++        children = node['children']
++        new_scope = dict(self._scope)
++        for name, expr in zip(node['value'], children[:-1]):
++            new_scope[name] = self.visit(expr, value)
++        saved = self._scope
++        self._scope = new_scope
++        try:
++            return self.visit(children[-1], value)
++        finally:
++            self._scope = saved
+ 
+     def visit_subexpression(self, node, value):
+         result = value

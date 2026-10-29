@@ -1,0 +1,40 @@
+diff --git a/jmespath/functions.py b/jmespath/functions.py
+--- a/jmespath/functions.py
++++ b/jmespath/functions.py
+@@ -347,14 +347,19 @@
+             return None
+ 
+     def _create_key_func(self, expref, allowed_types, function_name):
++        allowed = list(allowed_types)
++
+         def keyfunc(x):
+             result = expref.visit(expref.expression, x)
+             actual_typename = type(result).__name__
+             jmespath_type = self._convert_to_jmespath_type(actual_typename)
+             # allowed_types is in term of jmespath types, not python types.
+-            if jmespath_type not in allowed_types:
++            if jmespath_type not in allowed:
+                 raise exceptions.JMESPathTypeError(
+-                    function_name, result, jmespath_type, allowed_types)
++                    function_name, result, jmespath_type, allowed)
++            # All keys must share the type of the first one.
++            if len(allowed) > 1:
++                allowed[:] = [jmespath_type]
+             return result
+         return keyfunc
+ 
+diff --git a/jmespath/visitor.py b/jmespath/visitor.py
+--- a/jmespath/visitor.py
++++ b/jmespath/visitor.py
+@@ -152,8 +152,9 @@
+             left = self.visit(node['children'][0], value)
+             right = self.visit(node['children'][1], value)
+             num_types = (int, float)
+-            if not (_is_comparable(left) and
+-                    _is_comparable(right)):
++            if not ((_is_actual_number(left) and _is_actual_number(right)) or
++                    (isinstance(left, string_type) and
++                     isinstance(right, string_type))):
+                 return None
+             return comparator_func(left, right)
+ 

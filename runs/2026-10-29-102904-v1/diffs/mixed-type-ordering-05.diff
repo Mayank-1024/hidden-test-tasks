@@ -1,0 +1,52 @@
+diff --git a/jmespath/functions.py b/jmespath/functions.py
+--- a/jmespath/functions.py
++++ b/jmespath/functions.py
+@@ -332,7 +332,8 @@
+                                         ['number', 'string'],
+                                         'min_by')
+         if array:
+-            return min(array, key=keyfunc)
++            keys = self._checked_keys(array, keyfunc, 'min_by')
++            return array[min(range(len(array)), key=keys.__getitem__)]
+         else:
+             return None
+ 
+@@ -342,9 +343,20 @@
+                                         ['number', 'string'],
+                                         'max_by')
+         if array:
+-            return max(array, key=keyfunc)
+-        else:
+-            return None
++            keys = self._checked_keys(array, keyfunc, 'max_by')
++            return array[max(range(len(array)), key=keys.__getitem__)]
++        else:
++            return None
++
++    def _checked_keys(self, array, keyfunc, function_name):
++        keys = [keyfunc(x) for x in array]
++        first = self._convert_to_jmespath_type(type(keys[0]).__name__)
++        for key in keys:
++            t = self._convert_to_jmespath_type(type(key).__name__)
++            if t != first:
++                raise exceptions.JMESPathTypeError(
++                    function_name, key, t, [first])
++        return keys
+ 
+     def _create_key_func(self, expref, allowed_types, function_name):
+         def keyfunc(x):
+diff --git a/jmespath/visitor.py b/jmespath/visitor.py
+--- a/jmespath/visitor.py
++++ b/jmespath/visitor.py
+@@ -152,8 +152,9 @@
+             left = self.visit(node['children'][0], value)
+             right = self.visit(node['children'][1], value)
+             num_types = (int, float)
+-            if not (_is_comparable(left) and
+-                    _is_comparable(right)):
++            if not ((_is_actual_number(left) and _is_actual_number(right)) or
++                    (isinstance(left, string_type) and
++                     isinstance(right, string_type))):
+                 return None
+             return comparator_func(left, right)
+ 

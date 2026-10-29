@@ -9,9 +9,9 @@ diff --git a/jmespath/ast.py b/jmespath/ast.py
 +    return {'type': 'variable_ref', 'children': [], 'value': name}
 +
 +
-+def let_expression(names, exprs, body):
-+    return {'type': 'let_expression', 'children': list(exprs) + [body],
-+            'value': list(names)}
++def let_expression(names, expressions, body):
++    return {'type': 'let_expression', 'value': names,
++            'children': list(expressions) + [body]}
 +
 +
  def value_projection(left, right):
@@ -27,19 +27,32 @@ diff --git a/jmespath/exceptions.py b/jmespath/exceptions.py
 +
 +class UndefinedVariableError(JMESPathError):
 +    def __init__(self, name):
-+        self.variable_name = name
 +        super(UndefinedVariableError, self).__init__(
-+            "Undefined variable: $%s" % name)
++            "Reference to undefined variable: $%s" % name)
++        self.name = name
 diff --git a/jmespath/lexer.py b/jmespath/lexer.py
 --- a/jmespath/lexer.py
 +++ b/jmespath/lexer.py
-@@ -93,16 +93,22 @@
-                     self._next()
-                 else:
-                     if self._current is None:
--                        # If we're at the EOF, we never advanced
--                        # the position so we don't need to rewind
--                        # it back one location.
+@@ -78,6 +78,18 @@
+                     raise LexerError(lexer_position=start,
+                                      lexer_value=buff,
+                                      message="Unknown token '%s'" % buff)
++            elif self._current == '$':
++                start = self._position
++                if self._next() not in self.START_IDENTIFIER:
++                    raise LexerError(lexer_position=start,
++                                     lexer_value='$',
++                                     message="Expected variable name "
++                                             "after '$'")
++                buff = self._current
++                while self._next() in self.VALID_IDENTIFIER:
++                    buff += self._current
++                yield {'type': 'variable', 'value': buff,
++                       'start': start, 'end': start + len(buff) + 1}
+             elif self._current == '"':
+                 yield self._consume_quoted_identifier()
+             elif self._current == '<':
+@@ -99,10 +111,8 @@
                          position = self._position
                      else:
                          position = self._position - 1
@@ -49,37 +62,75 @@ diff --git a/jmespath/lexer.py b/jmespath/lexer.py
 -                        message="Unknown token '='")
 +                    yield {'type': 'assign', 'value': '=',
 +                           'start': position, 'end': position + 1}
-+            elif self._current == '$':
-+                start = self._position
-+                if self._next() not in self.START_IDENTIFIER:
-+                    raise LexerError(lexer_position=start,
-+                                     lexer_value='$',
-+                                     message="Expected variable name after '$'")
-+                buff = self._current
-+                while self._next() in self.VALID_IDENTIFIER:
-+                    buff += self._current
-+                yield {'type': 'variable', 'value': buff,
-+                       'start': start, 'end': start + len(buff) + 1}
              else:
                  raise LexerError(lexer_position=self._position,
                                   lexer_value=self._current,
+diff --git a/jmespath/parser.py b/jmespath/parser.py
+--- a/jmespath/parser.py
++++ b/jmespath/parser.py
+@@ -44,6 +44,8 @@
+         'rbrace': 0,
+         'number': 0,
+         'current': 0,
++        'variable': 0,
++        'assign': 0,
+         'expref': 0,
+         'colon': 0,
+         'pipe': 1,
+@@ -149,7 +151,33 @@
+         return ast.literal(token['value'])
+ 
+     def _token_nud_unquoted_identifier(self, token):
++        if token['value'] == 'let' and self._current_token() == 'variable':
++            return self._parse_let_expression()
+         return ast.field(token['value'])
++
++    def _token_nud_variable(self, token):
++        return ast.variable_ref(token['value'])
++
++    def _parse_let_expression(self):
++        names = []
++        expressions = []
++        while True:
++            token = self._lookahead_token(0)
++            self._match('variable')
++            self._match('assign')
++            names.append(token['value'])
++            expressions.append(self._expression(0))
++            if self._current_token() == 'comma':
++                self._match('comma')
++            else:
++                break
++        token = self._lookahead_token(0)
++        if not (token['type'] == 'unquoted_identifier' and
++                token['value'] == 'in'):
++            self._raise_parse_error_maybe_eof('in', token)
++        self._advance()
++        body = self._expression(0)
++        return ast.let_expression(names, expressions, body)
+ 
+     def _token_nud_quoted_identifier(self, token):
+         field = ast.field(token['value'])
 diff --git a/jmespath/visitor.py b/jmespath/visitor.py
 --- a/jmespath/visitor.py
 +++ b/jmespath/visitor.py
-@@ -1,6 +1,7 @@
+@@ -1,5 +1,6 @@
  import operator
  
- from jmespath import functions
 +from jmespath import exceptions
+ from jmespath import functions
  from jmespath.compat import string_type
  from numbers import Number
+@@ -72,12 +73,19 @@
  
-@@ -76,8 +77,16 @@
+ 
+ class _Expression(object):
+-    def __init__(self, expression, interpreter):
++    def __init__(self, expression, interpreter, scope=None):
          self.expression = expression
          self.interpreter = interpreter
++        self.scope = scope if scope is not None else {}
  
-+        self.scope = interpreter._scope
-+
      def visit(self, node, *args, **kwargs):
 -        return self.interpreter.visit(node, *args, **kwargs)
 +        interp = self.interpreter
@@ -92,7 +143,7 @@ diff --git a/jmespath/visitor.py b/jmespath/visitor.py
  
  
  class Visitor(object):
-@@ -115,6 +124,7 @@
+@@ -115,6 +123,7 @@
          if options is None:
              options = Options()
          self._options = options
@@ -100,10 +151,12 @@ diff --git a/jmespath/visitor.py b/jmespath/visitor.py
          if options.dict_cls is not None:
              self._dict_cls = self._options.dict_cls
          if options.custom_functions is not None:
-@@ -124,6 +134,24 @@
+@@ -161,7 +170,25 @@
+         return value
  
-     def default_visit(self, node, *args, **kwargs):
-         raise NotImplementedError(node['type'])
+     def visit_expref(self, node, value):
+-        return _Expression(node['children'][0], self)
++        return _Expression(node['children'][0], self, self._scope)
 +
 +    def visit_variable_ref(self, node, value):
 +        try:
@@ -123,5 +176,5 @@ diff --git a/jmespath/visitor.py b/jmespath/visitor.py
 +        finally:
 +            self._scope = saved
  
-     def visit_subexpression(self, node, value):
-         result = value
+     def visit_function_expression(self, node, value):
+         resolved_args = []

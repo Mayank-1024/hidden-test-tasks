@@ -11,10 +11,9 @@ hidden tests.
 Built with Python 3.13, uv, pytest, Docker and the Anthropic Python SDK.
 
 **Status (2026-10-29):** all three tasks verified, 8 of 8 known-wrong patches
-rejected, 86 offline tests passing. The planned 15 model attempts are
-**partly done: real runs pending, credit exhausted.** The API key ran out of
-credit after 6 completed attempts (plus one cut short). The exact command to
-finish the run is in [Finishing the run](#finishing-the-run).
+rejected, 86 offline tests passing. The planned 15 model attempts are done:
+**15 of 15 resolved, and none added a test.** The run was paused once when the
+API credit ran out and resumed the same day (see [Results](#results)).
 
 ## The three tasks
 
@@ -171,69 +170,73 @@ uv run --env-file .env python -m htt solve --attempts 5 --budget-usd 8
 
 All numbers are from real runs on 2026-10-29 with `claude-sonnet-5-5` at
 effort `medium`, tests in Docker. Reports, diffs and trajectories are
-committed under [runs/](runs/).
+committed under [runs/](runs/). The main run is
+[runs/2026-10-29-102904-v1](runs/2026-10-29-102904-v1/report.md); the two
+pilot runs (one attempt per task) are next to it.
 
-| Task | Attempts completed | Resolved | Cost per attempt | Model calls | Visible test runs |
+| Task | Kind | Resolved | Mean cost | Model calls per attempt | Visible test runs (mean) |
 |---|---|---|---|---|---|
-| let-expressions | 2 | 2 | $0.189, $0.160 | 9, 11 | 2, 2 |
-| mixed-type-ordering | 2 | 2 | $0.056, $0.054 | 4, 4 | 1, 1 |
-| types-module | 2 | 2 | $0.077, $0.092 | 5, 9 | 1, 1 |
+| let-expressions | feature | 5/5 | $0.162 | 11, 11, 11, 6, 11 | 1.4 |
+| mixed-type-ordering | bugfix | 5/5 | $0.041 | 4, 4, 4, 4, 4 | 1.0 |
+| types-module | refactor | 5/5 | $0.075 | 9, 5, 4, 6, 6 | 1.0 |
 
-- **6 of 6 completed attempts resolved**: every fail-to-pass, pass-to-pass
-  and visible test passed in each.
-- **Spend: $0.71 in total** across the two pilot runs and the main run,
-  including $0.085 for one attempt the API cut short. Input tokens: 714,339
-  read from the prompt cache, 124,603 written to it, 108 uncached; 25,783
-  output tokens.
-- **The main run stopped early.** During let-expressions attempt 2 the API
+- **15 of 15 attempts resolved** in the main run: every fail-to-pass,
+  pass-to-pass and visible test passed in each. The 3 pilot attempts also
+  resolved.
+- **Spend: $1.39** for the main run (100 model calls, 54,602 output tokens,
+  1,503,267 input tokens read from the prompt cache), $0.32 for the pilots,
+  and $0.085 for one attempt the API cut short: about $1.80 in total.
+- **The run was paused once.** During let-expressions attempt 2 the API
   returned HTTP 400, "Your credit balance is too low". That attempt and the 11
   after it failed. The harness at that commit graded them as unresolved and
   kept starting attempts; I fixed both (they are now `error`, excluded from
   pass rates, and a fatal error stops the run) and relabeled the stored report.
-  A probe call later the same day still failed with the same error.
+  After a top-up, `htt solve --resume` kept the 3 graded attempts and reran
+  the other 12, all on the same harness and settings.
 
 ### What the trajectories showed
 
-- **No tests, no changelog.** None of the 6 completed attempts added a test or
-  a CHANGELOG entry, although both are in every rubric. The first
-  let-expressions attempt said so in its summary: "I did not add tests for
-  the new syntax or run any `let` queries, so none of it has been exercised
-  yet." All 35 fail-to-pass tests passed anyway. Hidden tests alone score
-  these attempts as perfect; the rubric does not.
-- **Calls to tools that do not exist.** In 4 of 7 attempts the model called
-  `bash` or `bash_grep`, always with empty input, 6 calls in total. The
+- **The tasks do not separate models yet.** 15 of 15 is a ceiling. These
+  tasks show that the pipeline works (statements, hidden tests, sandbox,
+  grading), not how hard they are. The bug fix is the clearest case: all 5
+  attempts read two files, made the same two fixes as the gold patch (a
+  per-pair type check in the comparator, a first-key type check for
+  `min_by`/`max_by`) and finished in 4 model calls for about $0.04. The next
+  version should drop the second team's `max_by` report from task.md so the
+  solver has to find the other call sites itself, and the other two
+  statements should name fewer of the edge cases the hidden tests check.
+- **No tests, no changelog.** None of the 15 attempts added a test or a
+  CHANGELOG entry, although both are in every rubric. The first
+  let-expressions attempt said so in its summary: "I didn't add tests for
+  `let` itself, so the new behaviour hasn't been run." All 35 fail-to-pass
+  tests passed anyway. Hidden tests alone score these attempts as perfect;
+  the rubric does not.
+- **Calls to tools that do not exist.** 9 of 15 attempts called `bash` or
+  `bash_grep`, 15 calls in total, all in the feature and refactor tasks. The
   harness returned "unknown tool" and the model carried on with `read_file`.
   Where the reasoning before the call said anything, it was about finding a
   function definition; the tool set has no search tool. A confined
-  `search_files` tool is the obvious addition, left out so the remaining
-  attempts run on the same harness as the first ones.
-- **Edit misses.** 4 `edit_file` calls failed because `old_text` did not match
-  the file exactly. In the one the model commented on, it was indentation
-  ("Indentation mismatch; redo precisely."), fixed on the next call.
-- **The bug fix looks too easy.** Both attempts read two files, made the same
-  two fixes as the gold patch (a per-pair type check in the comparator, a
-  first-key type check for `min_by`/`max_by`) and finished in 4 calls for about $0.055. Two
-  attempts are not enough to call it trivial; if the remaining attempts look
-  the same, the next version should drop the second team's `max_by` report
-  from task.md so the solver has to find the other call sites itself.
+  `search_files` tool is the obvious addition, left out so every attempt ran
+  on the same harness.
+- **Edit misses.** In the first 7 attempts, 4 `edit_file` calls failed
+  because `old_text` did not match the file exactly. In the one the model
+  commented on, it was indentation ("Indentation mismatch; redo precisely."),
+  fixed on the next call.
 
-### Finishing the run
-
-Once the account has credit, this resumes the stored run. It keeps the 3
-graded attempts and runs the other 12 (4 per task):
+### Reproducing the run
 
 ```bash
 uv run --env-file .env \
-  python -m htt solve --resume runs/2026-10-29-102904-v1 --attempts 5 --budget-usd 3
+  python -m htt solve --attempts 5 --budget-usd 3
 ```
 
-`uv run python -m htt estimate --attempts 4` projects $1.25 for those 12 from
-the mean cost of the completed attempts ($0.174, $0.055 and $0.084 per task).
+`uv run python -m htt estimate --attempts 5` projects the cost first.
 
 ## Limitations
 
-- **Small sample.** Six completed attempts on three tasks is enough to show
-  the pipeline works end to end, not to estimate a pass rate.
+- **Small sample, and at the ceiling.** 15 attempts on three tasks, all
+  resolved: enough to show the pipeline works end to end, not to estimate a
+  pass rate or rank models.
 - **One library, one model.** All tasks share one base tree, and every attempt
   used `claude-sonnet-5-5` at effort `medium`.
 - **Task statements are explicit.** Every hidden test traces to a sentence in

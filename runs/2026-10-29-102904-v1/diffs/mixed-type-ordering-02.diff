@@ -1,0 +1,49 @@
+diff --git a/jmespath/functions.py b/jmespath/functions.py
+--- a/jmespath/functions.py
++++ b/jmespath/functions.py
+@@ -326,22 +326,24 @@
+                                         'sort_by')
+         return list(sorted(array, key=keyfunc))
+ 
++    def _homogeneous_key_func(self, array, expref, name):
++        first = self._create_key_func(
++            expref, ['number', 'string'], name)(array[0])
++        required = self._convert_to_jmespath_type(type(first).__name__)
++        return self._create_key_func(expref, [required], name)
++
+     @signature({'types': ['array']}, {'types': ['expref']})
+     def _func_min_by(self, array, expref):
+-        keyfunc = self._create_key_func(expref,
+-                                        ['number', 'string'],
+-                                        'min_by')
+         if array:
++            keyfunc = self._homogeneous_key_func(array, expref, 'min_by')
+             return min(array, key=keyfunc)
+         else:
+             return None
+ 
+     @signature({'types': ['array']}, {'types': ['expref']})
+     def _func_max_by(self, array, expref):
+-        keyfunc = self._create_key_func(expref,
+-                                        ['number', 'string'],
+-                                        'max_by')
+         if array:
++            keyfunc = self._homogeneous_key_func(array, expref, 'max_by')
+             return max(array, key=keyfunc)
+         else:
+             return None
+diff --git a/jmespath/visitor.py b/jmespath/visitor.py
+--- a/jmespath/visitor.py
++++ b/jmespath/visitor.py
+@@ -152,8 +152,9 @@
+             left = self.visit(node['children'][0], value)
+             right = self.visit(node['children'][1], value)
+             num_types = (int, float)
+-            if not (_is_comparable(left) and
+-                    _is_comparable(right)):
++            if not ((_is_actual_number(left) and _is_actual_number(right)) or
++                    (isinstance(left, string_type) and
++                     isinstance(right, string_type))):
+                 return None
+             return comparator_func(left, right)
+ 

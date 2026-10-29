@@ -14,9 +14,11 @@ environment and a set of known-wrong patches. `htt verify` proves each task is
 sound: the new tests fail before, pass after, nothing else breaks, results are
 stable, and every wrong patch is rejected. Then a small Claude tool-use loop
 attempts the tasks with five confined tools, and the harness grades the result
-on the hidden tests. Six completed attempts resolved 6 of 6 for $0.71 before
-the API credit ran out. The most useful finding was that none of them added a
-test or a changelog entry, which hidden tests cannot see but the rubric can.
+on the hidden tests. The main run resolved 15 of 15 attempts for $1.39 (it was
+paused once when the API credit ran out, then resumed). Two findings matter
+more than the pass rate: the tasks are at the ceiling, so they do not yet
+separate models, and none of the 15 attempts added a test or a changelog
+entry, which hidden tests cannot see but the rubric can.
 
 ## Walking the code in order
 
@@ -95,8 +97,8 @@ test or a changelog entry, which hidden tests cannot see but the rubric can.
   executed) and the trajectory format.
 - **Sonnet 5.5 at effort medium, caching on.** Medium is the documented
   starting point for agentic coding. Automatic caching moved the cache
-  breakpoint forward each turn, so 714,339 input tokens were cache reads and
-  only 108 were uncached.
+  breakpoint forward each turn, so in the main run 1,503,267 input tokens were
+  cache reads and only 230 were uncached.
 - **No refusal fallback.** Falling back to another model mid-attempt would
   credit one model with another model's work.
 - **Errors are not failures.** When the credit ran out, the first version of
@@ -115,18 +117,21 @@ this does not prove is that the tests cover every reasonable reading of the
 statement; that needs a second author to review them.
 
 **2. Aren't the tasks too easy if the model solved all of them?**
-Possibly, and I say so in the README. Six of six resolved, the bug fix in 4
-model calls. Part of the reason is that I wrote the statements so every hidden
-test is justified by a sentence, which also tells the solver what to check.
-With only two attempts per task I did not change the tasks mid-run, because
-that would make the remaining attempts incomparable. If the rest look the same,
-the first change is removing the `max_by` hint from the bug report.
+Yes, for Sonnet 5.5 at medium effort, and the README says so. 15 of 15
+resolved, and all 5 bug-fix attempts finished in 4 model calls with the same
+two fixes as the gold patch. Part of the reason is that I wrote the statements
+so every hidden test is justified by a sentence, which also tells the solver
+what to check. I did not change the tasks mid-run, because that would have
+made the attempts incomparable. The next version removes the `max_by` hint
+from the bug report and names fewer edge cases in the other two statements,
+then calibrates difficulty with several models until pass rates land in a
+useful band.
 
 **3. What did the trajectories teach you that the pass rate didn't?**
 That a 100% pass rate hid a quality gap: no attempt added a test or a
 changelog entry, and one said so in its own summary. Also that the model
-called a `bash` tool that does not exist in 4 of 7 attempts, apparently
-looking for a search tool.
+called a `bash` or `bash_grep` tool that does not exist in 9 of 15
+attempts (15 calls), apparently looking for a search tool.
 
 **4. How could a solver cheat, and what stops it?**
 It could edit or delete the visible tests (grading uses a pristine copy), add
@@ -163,7 +168,8 @@ I estimated first: a one-attempt pilot per task projected $1.61 for 15 attempts
 against an $8 cap. The run then stopped after $0.71 total because the API key
 ran out of credit. I fixed the harness so errored attempts are not scored and
 a fatal error stops the run, relabeled the stored report, and added `--resume`.
-The remaining 12 attempts are projected at $1.25.
+After a top-up, the resume reran the other 12 attempts; the main run cost
+$1.39 and everything together about $1.80, under the projection.
 
 **9. How would you scale this to hundreds of tasks?**
 Keep the task format and `htt verify` as the gate, and run verification in CI
@@ -174,8 +180,8 @@ for the rubric with spot checks by people.
 
 **10. What would you change first?**
 Add a confined `search_files` tool, since the model went looking for one.
-Make the bug-fix statement less leading. Finish the remaining 12 attempts and
-score the rubric for all of them. Then add a task where the statement is a
+Make the statements less leading so the tasks stop sitting at 15 of 15, and
+score the rubric for every attempt. Then add a task where the statement is a
 realistic, vaguer issue report, to measure how much the explicit statements
 are doing.
 

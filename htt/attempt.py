@@ -36,7 +36,11 @@ class AttemptResult:
     attempt: int
     solver: str
     model: str
-    status: str  # "graded" or "skipped"
+    # "graded": the solver finished (or hit a limit) and the result was graded.
+    # "error": the API failed mid-attempt; graded for the record, but excluded
+    #          from pass rates because the model did not get to finish.
+    # "skipped": never started (run budget reached or an earlier fatal error).
+    status: str
     resolved: bool = False
     stop: str = ""
     turns: int = 0
@@ -57,6 +61,7 @@ class AttemptResult:
     final_text: str = ""
     diff_file: str = ""
     trajectory_file: str = ""
+    fatal: bool = False
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -145,7 +150,8 @@ def run_attempt(
             attempt=index,
             solver=solver.name,
             model=outcome.model,
-            status="graded",
+            status="error" if outcome.stop.startswith("api_error") else "graded",
+            fatal=outcome.fatal,
             resolved=grade.resolved,
             stop=outcome.stop,
             turns=outcome.turns,
@@ -184,6 +190,11 @@ def _git_commit() -> str:
     return proc.stdout.strip() or "unknown"
 
 
+def _load_previous(run_dir: Path) -> tuple[dict, list[dict]]:
+    data = json.loads((run_dir / "report.json").read_text(encoding="utf-8"))
+    return data["meta"], data["attempts"]
+
+
 def run_attempts(
     tasks: list[Task],
     attempts: int,
@@ -194,34 +205,55 @@ def run_attempts(
     label: str = "",
     budget_usd: float | None = None,
     client: object = None,
+    resume: bool = False,
 ) -> Path:
-    """Run ``attempts`` per task, interleaved (round robin) so an early budget stop
-    still leaves every task with the same number of attempts, give or take one."""
+    """Run ``attempts`` per task, interleaved (round robin) so an early stop still
+    leaves every task with the same number of attempts, give or take one.
+
+    With ``resume``, ``out_dir`` must hold an earlier run: graded attempts are
+    kept and only attempts that errored or never ran are started.
+    """
     started = datetime.now(UTC)
     if out_dir is None:
         name = started.strftime("%Y-%m-%d-%H%M%S") + (f"-{label}" if label else "")
         out_dir = REPO_ROOT / "runs" / name
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    kept: dict[tuple[str, int], dict] = {}
+    if resume:
+        meta, previous = _load_previous(out_dir)
+        kept = {(a["task_id"], a["attempt"]): a for a in previous if a["status"] == "graded"}
+        meta.setdefault("resumed_at", []).append(started.strftime("%Y-%m-%dT%H:%M:%SZ"))
+        meta["harness_commit_resume"] = _git_commit()
+        meta.pop("finished_at", None)
+    else:
+        meta = {
+            "started_at": started.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "solver": solver_kind,
+            "config": asdict(config) if solver_kind == "claude" else {},
+            "runner": runner.name,
+            "runner_isolated": runner.isolated,
+            "harness_commit": _git_commit(),
+            "budget_usd": budget_usd,
+            "tasks": [t.id for t in tasks],
+            "attempts_per_task": attempts,
+        }
+
     solver = make_solver(solver_kind, config, client=client)
     for task in tasks:
         runner.prepare(task)
 
-    meta = {
-        "started_at": started.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "solver": solver_kind,
-        "config": asdict(config) if solver_kind == "claude" else {},
-        "runner": runner.name,
-        "runner_isolated": runner.isolated,
-        "harness_commit": _git_commit(),
-        "budget_usd": budget_usd,
-        "tasks": [t.id for t in tasks],
-        "attempts_per_task": attempts,
-    }
-    results: list[AttemptResult] = []
-    spent = 0.0
+    results: list[AttemptResult | dict] = []
+    spent = sum(a["cost_usd"] for a in kept.values())
+    stop_reason = ""
     for index in range(1, attempts + 1):
         for task in tasks:
-            if budget_usd is not None and spent >= budget_usd:
+            if (task.id, index) in kept:
+                results.append(kept[(task.id, index)])
+                continue
+            if not stop_reason and budget_usd is not None and spent >= budget_usd:
+                stop_reason = "not run: run budget reached"
+            if stop_reason:
                 results.append(
                     AttemptResult(
                         task.id,
@@ -230,7 +262,7 @@ def run_attempts(
                         solver_kind,
                         config.model,
                         status="skipped",
-                        stop="run budget reached",
+                        stop=stop_reason,
                     )
                 )
                 continue
@@ -238,11 +270,14 @@ def run_attempts(
             spent += result.cost_usd
             results.append(result)
             print(
-                f"[{task.id} #{index}] resolved={result.resolved} stop={result.stop} "
-                f"turns={result.turns} cost=${result.cost_usd:.3f} spent=${spent:.2f} "
-                f"hidden={result.summary}",
+                f"[{task.id} #{index}] status={result.status} resolved={result.resolved} "
+                f"stop={result.stop[:120]} turns={result.turns} cost=${result.cost_usd:.3f} "
+                f"spent=${spent:.2f} hidden={result.summary}",
                 flush=True,
             )
+            if result.fatal:
+                # Billing, auth or request errors: every later call would fail too.
+                stop_reason = "not run: earlier attempt hit a fatal API error"
             # Write as we go, so a crash keeps the finished attempts.
             write_report(out_dir, meta, results)
     meta["finished_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")

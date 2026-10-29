@@ -21,6 +21,8 @@ package = false
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+# tests/fixtures holds a toy task whose own tests are run by the harness, not here.
+norecursedirs = [".*", "fixtures", "__pycache__"]
 addopts = "-q"
 
 [tool.ruff]

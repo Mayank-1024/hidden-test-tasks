@@ -22,11 +22,16 @@ def _f2p_counts(a: dict) -> tuple[int, int]:
 
 
 def summarize(attempts: list[dict]) -> dict:
+    """Pass rates count graded attempts only. Attempts the API cut short ("error")
+    are listed and their spend is counted, but they are not scored as failures."""
     graded = [a for a in attempts if a["status"] == "graded"]
+    errored = [a for a in attempts if a["status"] == "error"]
+    spent = graded + errored
     per_task: dict[str, dict] = {}
     for task_id in sorted({a["task_id"] for a in attempts}):
         rows = [a for a in graded if a["task_id"] == task_id]
         skipped = sum(1 for a in attempts if a["task_id"] == task_id and a["status"] == "skipped")
+        errors = [a for a in errored if a["task_id"] == task_id]
         resolved = sum(1 for a in rows if a["resolved"])
         failed_tests: Counter[str] = Counter()
         for a in rows:
@@ -40,12 +45,13 @@ def summarize(attempts: list[dict]) -> dict:
             "kind": rows[0]["kind"] if rows else "",
             "attempts": n,
             "skipped": skipped,
+            "errors": len(errors),
             "resolved": resolved,
             "pass_rate": round(resolved / n, 3) if n else None,
             "mean_fail_to_pass_fraction": round(sum(f2p_fracs) / len(f2p_fracs), 3)
             if f2p_fracs
             else None,
-            "cost_usd": round(sum(a["cost_usd"] for a in rows), 4),
+            "cost_usd": round(sum(a["cost_usd"] for a in rows + errors), 4),
             "mean_cost_usd": round(sum(a["cost_usd"] for a in rows) / n, 4) if n else None,
             "mean_turns": round(sum(a["turns"] for a in rows) / n, 1) if n else None,
             "mean_test_runs": round(sum(a["test_runs"] for a in rows) / n, 1) if n else None,
@@ -61,14 +67,15 @@ def summarize(attempts: list[dict]) -> dict:
         "total_tokens",
         "calls",
     )
-    totals = {k: sum((a.get("usage") or {}).get(k, 0) for a in graded) for k in usage_keys}
+    totals = {k: sum((a.get("usage") or {}).get(k, 0) for a in spent) for k in usage_keys}
     totals.update(
         {
             "attempts": len(graded),
-            "skipped": len(attempts) - len(graded),
+            "errors": len(errored),
+            "skipped": sum(1 for a in attempts if a["status"] == "skipped"),
             "resolved": sum(1 for a in graded if a["resolved"]),
-            "cost_usd": round(sum(a["cost_usd"] for a in graded), 4),
-            "solve_s": round(sum(a["solve_s"] for a in graded), 1),
+            "cost_usd": round(sum(a["cost_usd"] for a in spent), 4),
+            "solve_s": round(sum(a["solve_s"] for a in spent), 1),
         }
     )
     return {"per_task": per_task, "totals": totals}
@@ -104,6 +111,10 @@ def render_markdown(meta: dict, attempts: list[dict], summary: dict) -> str:
         lines.append(f"- Run budget: ${meta['budget_usd']}")
     if meta.get("finished_at"):
         lines.append(f"- Finished: {meta['finished_at']}")
+    if meta.get("resumed_at"):
+        lines.append(f"- Resumed: {', '.join(meta['resumed_at'])}")
+    if meta.get("note"):
+        lines.append(f"- Note: {meta['note']}")
     lines += [
         "",
         "## Results by task",
@@ -122,9 +133,10 @@ def render_markdown(meta: dict, attempts: list[dict], summary: dict) -> str:
         )
     lines += [
         "",
-        f"**Total:** {t['resolved']}/{t['attempts']} attempts resolved"
-        + (f", {t['skipped']} skipped (budget)" if t["skipped"] else "")
-        + f". Cost ${t['cost_usd']:.2f}. Tokens: {t['input_tokens']:,} input, "
+        f"**Total:** {t['resolved']}/{t['attempts']} graded attempts resolved"
+        + (f", {t['errors']} cut short by an API error (not scored)" if t["errors"] else "")
+        + (f", {t['skipped']} not run" if t["skipped"] else "")
+        + f". Spend ${t['cost_usd']:.2f} (all attempts). Tokens: {t['input_tokens']:,} input, "
         f"{t['cache_creation_input_tokens']:,} cache write, {t['cache_read_input_tokens']:,} "
         f"cache read, {t['output_tokens']:,} output, over {t['calls']} model calls. "
         f"Solver wall time {t['solve_s'] / 60:.1f} min.",
@@ -136,16 +148,18 @@ def render_markdown(meta: dict, attempts: list[dict], summary: dict) -> str:
         "|---|---|---|---|---|---|---|---|---|---|---|",
     ]
     for a in attempts:
-        if a["status"] != "graded":
+        if a["status"] == "skipped":
             lines.append(
-                f"| {a['task_id']} #{a['attempt']} | skipped | | | | {a['stop']} | | | | | |"
+                f"| {a['task_id']} #{a['attempt']} | not run | | | | {a['stop']} | | | | | |"
             )
             continue
         s = a["summary"]
+        verdict = "API error" if a["status"] == "error" else ("yes" if a["resolved"] else "no")
+        stop = a["stop"] if len(a["stop"]) <= 60 else a["stop"][:57] + "..."
         lines.append(
             f"| [{a['task_id']} #{a['attempt']}]({a['trajectory_file']}) | "
-            f"{'yes' if a['resolved'] else 'no'} | {s.get('fail_to_pass')} | "
-            f"{s.get('pass_to_pass')} | {s.get('visible')} | {a['stop']} | {a['turns']} | "
+            f"{verdict} | {s.get('fail_to_pass')} | "
+            f"{s.get('pass_to_pass')} | {s.get('visible')} | {stop} | {a['turns']} | "
             f"{a['test_runs']} | ${a['cost_usd']:.3f} | +{a['lines_added']}/-{a['lines_removed']}"
             f" | {', '.join(a['flags']) or '-'} |"
         )

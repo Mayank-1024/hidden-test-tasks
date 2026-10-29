@@ -81,7 +81,7 @@ def diff_trees(before: Path, after: Path) -> str:
             if rel not in old or rel not in new or old[rel].read_bytes() != new[rel].read_bytes():
                 chunks.append(f"Binary file {rel} differs\n")
             continue
-        if a == b:
+        if a == b and rel in old and rel in new:
             continue
         header = f"diff --git a/{rel} b/{rel}\n"
         if rel not in old:

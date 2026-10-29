@@ -1,0 +1,129 @@
+{
+  "meta": {
+    "started_at": "2026-10-29T10:24:14Z",
+    "solver": "claude",
+    "config": {
+      "model": "claude-sonnet-5-5",
+      "effort": "medium",
+      "max_turns": 30,
+      "max_output_tokens": 16000,
+      "max_total_tokens": 1500000,
+      "max_cost_usd": 0.9
+    },
+    "runner": "docker",
+    "runner_isolated": true,
+    "harness_commit": "3aa3198",
+    "budget_usd": null,
+    "tasks": [
+      "mixed-type-ordering"
+    ],
+    "attempts_per_task": 1,
+    "finished_at": "2026-10-29T10:24:35Z",
+    "note": "Pilot before the full run. Harness code was the same as commit 49a9957 but not yet committed (the recorded commit is the one before it). Hidden tests were reformatted by ruff afterwards; their content did not change."
+  },
+  "summary": {
+    "per_task": {
+      "mixed-type-ordering": {
+        "kind": "bugfix",
+        "attempts": 1,
+        "skipped": 0,
+        "errors": 0,
+        "resolved": 1,
+        "pass_rate": 1.0,
+        "mean_fail_to_pass_fraction": 1.0,
+        "cost_usd": 0.0557,
+        "mean_cost_usd": 0.0557,
+        "mean_turns": 4.0,
+        "mean_test_runs": 1.0,
+        "mean_solve_s": 18.0,
+        "stops": {
+          "end_turn": 1
+        },
+        "most_failed_hidden_tests": []
+      }
+    },
+    "totals": {
+      "input_tokens": 10,
+      "output_tokens": 1787,
+      "cache_creation_input_tokens": 13440,
+      "cache_read_input_tokens": 20842,
+      "total_tokens": 36079,
+      "calls": 4,
+      "attempts": 1,
+      "errors": 0,
+      "skipped": 0,
+      "resolved": 1,
+      "cost_usd": 0.0557,
+      "solve_s": 18.0
+    }
+  },
+  "attempts": [
+    {
+      "task_id": "mixed-type-ordering",
+      "kind": "bugfix",
+      "attempt": 1,
+      "solver": "claude",
+      "model": "claude-sonnet-5-5",
+      "status": "graded",
+      "resolved": true,
+      "stop": "end_turn",
+      "turns": 4,
+      "test_runs": 1,
+      "usage": {
+        "input_tokens": 10,
+        "output_tokens": 1787,
+        "cache_creation_input_tokens": 13440,
+        "cache_read_input_tokens": 20842,
+        "calls": 4,
+        "total_tokens": 36079
+      },
+      "cost_usd": 0.0557,
+      "solve_s": 18.0,
+      "grade_s": 1.8,
+      "summary": {
+        "fail_to_pass": "24/24",
+        "pass_to_pass": "34/34",
+        "visible": "991/992 (1 skipped)"
+      },
+      "fail_to_pass": {
+        "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?age > `30`].name-expected0]": "passed",
+        "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?age >= `25`].name-expected1]": "passed",
+        "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?age < `30`].name-expected2]": "passed",
+        "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?age <= `40`].name-expected3]": "passed",
+        "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?`30` < age].name-expected4]": "passed",
+        "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?!(age > `30`)].name-expected5]": "passed",
+        "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?age > `30` || name == 'b'].name-expected6]": "passed",
+        "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`\"a\"` < `1`]": "passed",
+        "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`\"a\"` <= `1`]": "passed",
+        "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`\"a\"` > `1`]": "passed",
+        "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`\"a\"` >= `1`]": "passed",
+        "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`1` < `\"a\"`]": "passed",
+        "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`1.5` >= `\"a\"`]": "passed",
+        "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[a < b]": "passed",
+        "hidden_tests.test_fail_to_pass::test_multiselect_comparisons_are_null": "passed",
+        "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages0-max_by]": "passed",
+        "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages0-min_by]": "passed",
+        "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages1-max_by]": "passed",
+        "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages1-min_by]": "passed",
+        "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages2-max_by]": "passed",
+        "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages2-min_by]": "passed",
+        "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages3-max_by]": "passed",
+        "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages3-min_by]": "passed",
+        "hidden_tests.test_fail_to_pass::test_service_style_error_handling": "passed"
+      },
+      "failing_pass_to_pass": [],
+      "failing_visible": [],
+      "missing_tests": [],
+      "changed_files": [
+        "jmespath/functions.py",
+        "jmespath/visitor.py"
+      ],
+      "lines_added": 12,
+      "lines_removed": 2,
+      "flags": [],
+      "final_text": "The crash came from two places that let Python compare a string with a number. I fixed both, and the visible test suite passes.\n\n**Root cause**\n- **Comparators:** `visit_comparator` in `jmespath/visitor.py` treated \"string or number\" as one comparable class. A string on one side and a number on the other went straight to Python's `<`, `>`, `<=` or `>=`, which raised `TypeError`.\n- **`min_by` / `max_by`:** the key function in `jmespath/functions.py` checked each key on its own, so a string key and a number key both passed. Python then raised `TypeError` when it compared them.\n\n**Fix**\n- **Comparators:** ordering comparisons now run only when both sides are numbers or both are strings. Any other pair returns `null`, so your filter skips the `\"unknown\"` record and returns `[\"a\"]`. Equality, the rule that booleans aren't numbers, and number-vs-number and string-vs-string results are unchanged.\n- **`min_by` / `max_by`:** the key function now remembers the type of the first key. If a later key is a different type, it raises `JMESPathTypeError`.\n- **`sort_by`, `sort`, `min` and `max`:** these already raised `JMESPathTypeError` on mixed types, so I left them alone.\n- **Custom functions:** I didn't add any `try/except TypeError`, so exceptions from custom functions still propagate unchanged.\n\nI didn't add new tests for the mixed string/number cases, so those paths are only covered by my reading of the code and the existing suite.",
+      "diff_file": "diffs/mixed-type-ordering-01.diff",
+      "trajectory_file": "trajectories/mixed-type-ordering-01.json"
+    }
+  ]
+}

@@ -45,7 +45,10 @@ def cmd_solve(args: argparse.Namespace) -> int:
     )
     runner = make_runner(args.runner)
     tasks = _tasks(args.task)
-    out_dir = Path(args.out) if args.out else None
+    out_dir = Path(args.resume or args.out) if (args.resume or args.out) else None
+    if args.resume and not (out_dir / "report.json").exists():
+        print(f"error: {out_dir} has no report.json to resume", file=sys.stderr)
+        return 2
     run_dir = run_attempts(
         tasks,
         attempts=args.attempts,
@@ -55,6 +58,7 @@ def cmd_solve(args: argparse.Namespace) -> int:
         out_dir=out_dir,
         label=args.label,
         budget_usd=args.budget_usd,
+        resume=bool(args.resume),
     )
     print(f"report: {run_dir / 'report.md'}")
     return 0
@@ -111,6 +115,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--runner", default="auto", choices=["auto", "docker", "local"])
     s.add_argument("--out", default=None, help="run directory (default: runs/<timestamp>)")
     s.add_argument("--label", default="", help="suffix for the run directory name")
+    s.add_argument(
+        "--resume",
+        default=None,
+        metavar="RUN_DIR",
+        help="finish an earlier run: keep graded attempts, run the rest",
+    )
     s.set_defaults(func=cmd_solve)
 
     r = sub.add_parser("report", help="rebuild report.md/report.json for a run directory")

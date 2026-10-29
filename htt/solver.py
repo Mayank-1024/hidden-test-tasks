@@ -36,6 +36,8 @@ questions: make reasonable decisions yourself. When you are finished, reply \
 with a short summary of what you changed and do not call any more tools."""
 
 TOOL_RESULT_TRAJECTORY_CHARS = 4000
+# 400 includes "credit balance is too low"; none of these succeed on retry.
+FATAL_STATUS_CODES = {400, 401, 403, 404}
 
 
 @dataclass
@@ -58,6 +60,9 @@ class SolveOutcome:
     final_text: str = ""
     trajectory: list[dict] = field(default_factory=list)
     model: str = ""
+    # True when the API rejected the request for a reason that will not go away
+    # on retry (billing, auth, a malformed request), so the run should stop.
+    fatal: bool = False
 
 
 class Solver(Protocol):
@@ -151,7 +156,10 @@ class ClaudeSolver:
             try:
                 response = self._request(messages)
             except Exception as e:  # noqa: BLE001 - recorded, attempt ends
+                # The SDK has already retried 408/409/429/5xx and connection
+                # errors. Anything left is recorded as an infrastructure error.
                 out.stop = f"api_error: {type(e).__name__}: {str(e)[:300]}"
+                out.fatal = getattr(e, "status_code", None) in FATAL_STATUS_CODES
                 break
 
             out.turns = turn

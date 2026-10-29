@@ -1,0 +1,6 @@
+id = "toy-mean"
+kind = "bugfix"
+title = "mean() crashes on an empty list"
+base = "../base"
+source_dirs = ["toylib"]
+timeout_seconds = 60

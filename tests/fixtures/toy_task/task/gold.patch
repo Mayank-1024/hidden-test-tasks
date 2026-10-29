@@ -1,0 +1,8 @@
+diff --git a/toylib/stats.py b/toylib/stats.py
+--- a/toylib/stats.py
++++ b/toylib/stats.py
+@@ -1,2 +1,4 @@
+ def mean(values):
++    if len(values) == 0:
++        return None
+     return sum(values) / len(values)

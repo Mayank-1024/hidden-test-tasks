@@ -39,10 +39,10 @@ class PytestRun:
     cases: dict[str, str] = field(default_factory=dict)
 
     def group(self, name: str) -> dict[str, str]:
-        return {k: v for k, v in self.cases.items() if test_group(k) == name}
+        return {k: v for k, v in self.cases.items() if classify_test(k) == name}
 
 
-def test_group(test_id: str) -> str:
+def classify_test(test_id: str) -> str:
     """Classify a junit test id as fail_to_pass, pass_to_pass, visible or other."""
     module = test_id.split("::", 1)[0]
     f2p = f"{HIDDEN_TESTS_DIR}.{FAIL_TO_PASS_FILE.removesuffix('.py')}"

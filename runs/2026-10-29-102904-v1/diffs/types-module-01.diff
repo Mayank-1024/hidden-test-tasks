@@ -1,0 +1,157 @@
+diff --git a/jmespath/functions.py b/jmespath/functions.py
+--- a/jmespath/functions.py
++++ b/jmespath/functions.py
+@@ -6,33 +6,7 @@
+ from jmespath.compat import get_methods
+ 
+ 
+-# python types -> jmespath types
+-TYPES_MAP = {
+-    'bool': 'boolean',
+-    'list': 'array',
+-    'dict': 'object',
+-    'NoneType': 'null',
+-    'unicode': 'string',
+-    'str': 'string',
+-    'float': 'number',
+-    'int': 'number',
+-    'long': 'number',
+-    'OrderedDict': 'object',
+-    '_Projection': 'array',
+-    '_Expression': 'expref',
+-}
+-
+-
+-# jmespath types -> python types
+-REVERSE_TYPES_MAP = {
+-    'boolean': ('bool',),
+-    'array': ('list', '_Projection'),
+-    'object': ('dict', 'OrderedDict',),
+-    'null': ('NoneType',),
+-    'string': ('unicode', 'str'),
+-    'number': ('float', 'int', 'long'),
+-    'expref': ('_Expression',),
+-}
++from jmespath.types import TYPES_MAP, REVERSE_TYPES_MAP  # noqa
+ 
+ 
+ def signature(*arguments):
+diff --git a/jmespath/types.py b/jmespath/types.py
+new file mode 100644
+--- /dev/null
++++ b/jmespath/types.py
+@@ -0,0 +1,47 @@
++from numbers import Number
++
++
++# python types -> jmespath types
++TYPES_MAP = {
++    'bool': 'boolean',
++    'list': 'array',
++    'dict': 'object',
++    'NoneType': 'null',
++    'unicode': 'string',
++    'str': 'string',
++    'float': 'number',
++    'int': 'number',
++    'long': 'number',
++    'OrderedDict': 'object',
++    '_Projection': 'array',
++    '_Expression': 'expref',
++}
++
++
++# jmespath types -> python types
++REVERSE_TYPES_MAP = {
++    'boolean': ('bool',),
++    'array': ('list', '_Projection'),
++    'object': ('dict', 'OrderedDict',),
++    'null': ('NoneType',),
++    'string': ('unicode', 'str'),
++    'number': ('float', 'int', 'long'),
++    'expref': ('_Expression',),
++}
++
++
++def jmespath_type(value):
++    """Return the JMESPath type name of value, or "unknown"."""
++    return TYPES_MAP.get(type(value).__name__, 'unknown')
++
++
++def is_number(value):
++    # Booleans are instances of int in python, but not JMESPath numbers.
++    if isinstance(value, bool):
++        return False
++    return isinstance(value, Number)
++
++
++def is_comparable(value):
++    # Numbers and (by long-standing behavior) strings can be ordered.
++    return is_number(value) or isinstance(value, str)
+diff --git a/jmespath/visitor.py b/jmespath/visitor.py
+--- a/jmespath/visitor.py
++++ b/jmespath/visitor.py
+@@ -1,8 +1,7 @@
+ import operator
+ 
+ from jmespath import functions
+-from jmespath.compat import string_type
+-from numbers import Number
++from jmespath.types import is_number, is_comparable
+ 
+ 
+ def _equals(x, y):
+@@ -29,31 +28,10 @@
+     # Also need to consider that:
+     # >>> 0 in [True, False]
+     # True
+-    if _is_actual_number(x) and x in (0, 1):
++    if is_number(x) and x in (0, 1):
+         return isinstance(y, bool)
+-    elif _is_actual_number(y) and y in (0, 1):
++    elif is_number(y) and y in (0, 1):
+         return isinstance(x, bool)
+-
+-
+-def _is_comparable(x):
+-    # The spec doesn't officially support string types yet,
+-    # but enough people are relying on this behavior that
+-    # it's been added back.  This should eventually become
+-    # part of the official spec.
+-    return _is_actual_number(x) or isinstance(x, string_type)
+-
+-
+-def _is_actual_number(x):
+-    # We need to handle python's quirkiness with booleans,
+-    # specifically:
+-    #
+-    # >>> isinstance(False, int)
+-    # True
+-    # >>> isinstance(True, int)
+-    # True
+-    if isinstance(x, bool):
+-        return False
+-    return isinstance(x, Number)
+ 
+ 
+ class Options(object):
+@@ -152,8 +130,8 @@
+             left = self.visit(node['children'][0], value)
+             right = self.visit(node['children'][1], value)
+             num_types = (int, float)
+-            if not (_is_comparable(left) and
+-                    _is_comparable(right)):
++            if not (is_comparable(left) and
++                    is_comparable(right)):
+                 return None
+             return comparator_func(left, right)
+ 
+@@ -257,7 +235,7 @@
+ 
+     def visit_not_expression(self, node, value):
+         original_result = self.visit(node['children'][0], value)
+-        if _is_actual_number(original_result) and original_result == 0:
++        if is_number(original_result) and original_result == 0:
+             # Special case for 0, !0 should be false, not true.
+             # 0 is not a special cased integer in jmespath.
+             return False

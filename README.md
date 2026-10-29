@@ -223,7 +223,7 @@ Once the account has credit, this resumes the stored run. It keeps the 3
 graded attempts and runs the other 12 (4 per task):
 
 ```bash
-uv run --env-file /Users/mayank/Desktop/commerce-support-agent/.env \
+uv run --env-file .env \
   python -m htt solve --resume runs/2026-10-29-102904-v1 --attempts 5 --budget-usd 3
 ```
 

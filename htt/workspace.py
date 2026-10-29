@@ -97,8 +97,10 @@ def diff_trees(before: Path, after: Path) -> str:
             )
         )
         # difflib leaves the last line without "\n" if the file has none.
-        body = "".join(line if line.endswith("\n") else line + "\n\\ No newline at end of file\n"
-                       for line in lines)
+        body = "".join(
+            line if line.endswith("\n") else line + "\n\\ No newline at end of file\n"
+            for line in lines
+        )
         chunks.append(header + body)
     return "".join(chunks)
 

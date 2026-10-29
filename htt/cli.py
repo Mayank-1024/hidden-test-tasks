@@ -1,9 +1,9 @@
 """Command line: verify tasks, run solver attempts, rebuild reports.
 
-    uv run python -m htt verify [TASK ...] [--runner docker|local] [--repeat N]
-    uv run python -m htt solve --task TASK [--attempts N] [--solver claude|gold|noop]
-    uv run python -m htt estimate
-    uv run python -m htt report RUN_DIR
+uv run python -m htt verify [TASK ...] [--runner docker|local] [--repeat N]
+uv run python -m htt solve --task TASK [--attempts N] [--solver claude|gold|noop]
+uv run python -m htt estimate
+uv run python -m htt report RUN_DIR
 """
 
 from __future__ import annotations
@@ -71,14 +71,18 @@ def cmd_report(args: argparse.Namespace) -> int:
 def cmd_estimate(args: argparse.Namespace) -> int:
     from htt.pricing import estimate_from_runs
 
-    print(estimate_from_runs(REPO_ROOT / "runs", attempts_per_task=args.attempts,
-                             tasks=len(_tasks([]))))
+    print(
+        estimate_from_runs(
+            REPO_ROOT / "runs", attempts_per_task=args.attempts, tasks=len(_tasks([]))
+        )
+    )
     return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="htt", description=__doc__,
-                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser = argparse.ArgumentParser(
+        prog="htt", description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
+    )
     sub = parser.add_subparsers(dest="command", required=True)
 
     v = sub.add_parser("verify", help="prove tasks are well formed")
@@ -98,8 +102,12 @@ def build_parser() -> argparse.ArgumentParser:
     s.add_argument("--max-output-tokens", type=int, default=16000, help="per model call")
     s.add_argument("--max-total-tokens", type=int, default=1_500_000, help="per attempt")
     s.add_argument("--max-cost-usd", type=float, default=0.90, help="per attempt")
-    s.add_argument("--budget-usd", type=float, default=None,
-                   help="stop starting new attempts once this much has been spent in the run")
+    s.add_argument(
+        "--budget-usd",
+        type=float,
+        default=None,
+        help="stop starting new attempts once this much has been spent in the run",
+    )
     s.add_argument("--runner", default="auto", choices=["auto", "docker", "local"])
     s.add_argument("--out", default=None, help="run directory (default: runs/<timestamp>)")
     s.add_argument("--label", default="", help="suffix for the run directory name")

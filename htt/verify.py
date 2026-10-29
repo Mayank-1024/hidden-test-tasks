@@ -75,8 +75,11 @@ def _hidden_test_names(task: Task) -> list[str]:
     names = []
     for path in sorted(task.hidden_tests.glob("test_*.py")):
         tree = ast.parse(path.read_text(encoding="utf-8"))
-        names += [n.name for n in ast.walk(tree) if isinstance(n, ast.FunctionDef)
-                  and n.name.startswith("test_")]
+        names += [
+            n.name
+            for n in ast.walk(tree)
+            if isinstance(n, ast.FunctionDef) and n.name.startswith("test_")
+        ]
     return names
 
 
@@ -97,29 +100,36 @@ def static_checks(task: Task) -> list[Check]:
     patch_text = task.gold_patch.read_text(encoding="utf-8")
     touched = changed_files(patch_text)
     bad = [
-        f for f in touched
+        f
+        for f in touched
         if not (f.split("/", 1)[0] in task.source_dirs or DOC_FILE.match(f))
         or f.startswith(f"{VISIBLE_TESTS_DIR}/")
     ]
-    checks.append(Check(
-        "gold patch touches only source and doc files",
-        bool(touched) and not bad,
-        f"touches {touched}" + (f"; not allowed: {bad}" if bad else ""),
-    ))
+    checks.append(
+        Check(
+            "gold patch touches only source and doc files",
+            bool(touched) and not bad,
+            f"touches {touched}" + (f"; not allowed: {bad}" if bad else ""),
+        )
+    )
 
     prompt = task.task_md.read_text(encoding="utf-8")
     leaked = [line for line in _gold_added_lines(patch_text) if line in prompt]
-    checks.append(Check(
-        "task.md does not quote the gold patch",
-        not leaked,
-        f"{len(leaked)} gold lines found in task.md" + (f": {leaked[:3]}" if leaked else ""),
-    ))
+    checks.append(
+        Check(
+            "task.md does not quote the gold patch",
+            not leaked,
+            f"{len(leaked)} gold lines found in task.md" + (f": {leaked[:3]}" if leaked else ""),
+        )
+    )
     named = [n for n in _hidden_test_names(task) if n in prompt]
-    checks.append(Check(
-        "task.md does not name hidden tests",
-        not named,
-        ", ".join(named) if named else "no hidden test names in task.md",
-    ))
+    checks.append(
+        Check(
+            "task.md does not name hidden tests",
+            not named,
+            ", ".join(named) if named else "no hidden test names in task.md",
+        )
+    )
     return checks
 
 
@@ -136,17 +146,25 @@ def run_checks(task: Task, runner: Runner, repeat: int = 1) -> tuple[list[Check]
         p2p_failing = sorted(k for k, v in start.pass_to_pass.items() if v != "passed")
         vis_failing = sorted(k for k, v in start.visible.items() if v not in ("passed", "skipped"))
         checks += [
-            Check("start: every fail-to-pass test fails", bool(start.fail_to_pass)
-                  and not f2p_passing,
-                  f"{len(start.fail_to_pass) - len(f2p_passing)}/{len(start.fail_to_pass)} fail"
-                  + (f"; passing: {f2p_passing[:5]}" if f2p_passing else "")),
-            Check("start: every pass-to-pass test passes", not p2p_failing,
-                  f"{start.count(start.pass_to_pass)}/{len(start.pass_to_pass)} pass"
-                  + (f"; failing: {p2p_failing[:5]}" if p2p_failing else "")),
-            Check("start: visible suite passes", bool(start.visible) and not vis_failing,
-                  f"{start.count(start.visible)}/{len(start.visible)} pass, "
-                  f"{start.count(start.visible, 'skipped')} skipped"
-                  + (f"; failing: {vis_failing[:5]}" if vis_failing else "")),
+            Check(
+                "start: every fail-to-pass test fails",
+                bool(start.fail_to_pass) and not f2p_passing,
+                f"{len(start.fail_to_pass) - len(f2p_passing)}/{len(start.fail_to_pass)} fail"
+                + (f"; passing: {f2p_passing[:5]}" if f2p_passing else ""),
+            ),
+            Check(
+                "start: every pass-to-pass test passes",
+                not p2p_failing,
+                f"{start.count(start.pass_to_pass)}/{len(start.pass_to_pass)} pass"
+                + (f"; failing: {p2p_failing[:5]}" if p2p_failing else ""),
+            ),
+            Check(
+                "start: visible suite passes",
+                bool(start.visible) and not vis_failing,
+                f"{start.count(start.visible)}/{len(start.visible)} pass, "
+                f"{start.count(start.visible, 'skipped')} skipped"
+                + (f"; failing: {vis_failing[:5]}" if vis_failing else ""),
+            ),
         ]
 
         gold_tree = materialize(task, tmp / "gold")
@@ -166,15 +184,24 @@ def run_checks(task: Task, runner: Runner, repeat: int = 1) -> tuple[list[Check]
         )
         missing_on_start = sorted(set(gold.fail_to_pass) - set(start.fail_to_pass))
         checks += [
-            Check("gold: every hidden test passes", bool(gold.fail_to_pass) and not hidden_failing,
-                  f"{gold.count(gold.fail_to_pass)}/{len(gold.fail_to_pass)} fail-to-pass, "
-                  f"{gold.count(gold.pass_to_pass)}/{len(gold.pass_to_pass)} pass-to-pass"
-                  + (f"; failing: {hidden_failing[:5]}" if hidden_failing else "")),
-            Check("gold: visible suite still passes", bool(gold.visible) and not gold_vis_failing,
-                  f"{gold.count(gold.visible)}/{len(gold.visible)} pass"
-                  + (f"; failing: {gold_vis_failing[:5]}" if gold_vis_failing else "")),
-            Check("same fail-to-pass tests collected on start and gold", not missing_on_start,
-                  f"missing on start: {missing_on_start[:5]}" if missing_on_start else ""),
+            Check(
+                "gold: every hidden test passes",
+                bool(gold.fail_to_pass) and not hidden_failing,
+                f"{gold.count(gold.fail_to_pass)}/{len(gold.fail_to_pass)} fail-to-pass, "
+                f"{gold.count(gold.pass_to_pass)}/{len(gold.pass_to_pass)} pass-to-pass"
+                + (f"; failing: {hidden_failing[:5]}" if hidden_failing else ""),
+            ),
+            Check(
+                "gold: visible suite still passes",
+                bool(gold.visible) and not gold_vis_failing,
+                f"{gold.count(gold.visible)}/{len(gold.visible)} pass"
+                + (f"; failing: {gold_vis_failing[:5]}" if gold_vis_failing else ""),
+            ),
+            Check(
+                "same fail-to-pass tests collected on start and gold",
+                not missing_on_start,
+                f"missing on start: {missing_on_start[:5]}" if missing_on_start else "",
+            ),
         ]
         if repeat > 1:
             first = _outcomes(gold)
@@ -182,8 +209,13 @@ def run_checks(task: Task, runner: Runner, repeat: int = 1) -> tuple[list[Check]
             for _ in range(repeat - 1):
                 again = _outcomes(grade_tree(task, gold_tree, runner, use_expected=False))
                 unstable += [k for k in first if again.get(k) != first[k]]
-            checks.append(Check(f"gold outcomes identical over {repeat} runs", not unstable,
-                                f"unstable: {sorted(set(unstable))[:5]}" if unstable else ""))
+            checks.append(
+                Check(
+                    f"gold outcomes identical over {repeat} runs",
+                    not unstable,
+                    f"unstable: {sorted(set(unstable))[:5]}" if unstable else "",
+                )
+            )
         return checks, start, gold
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
@@ -204,8 +236,7 @@ def check_mutants(task: Task, runner: Runner) -> tuple[list[Check], dict[str, di
                 continue
             grade = grade_tree(task, tree, runner, use_expected=False)
             caught = sorted(
-                k for k, v in {**grade.fail_to_pass, **grade.pass_to_pass}.items()
-                if v != "passed"
+                k for k, v in {**grade.fail_to_pass, **grade.pass_to_pass}.items() if v != "passed"
             )
             details[patch.stem] = {
                 "rejected": not grade.resolved,
@@ -213,10 +244,13 @@ def check_mutants(task: Task, runner: Runner) -> tuple[list[Check], dict[str, di
                 "examples": [c.split("::", 1)[1] for c in caught[:3]],
                 "summary": grade.summary(),
             }
-            checks.append(Check(
-                f"mutant {patch.stem} is rejected", not grade.resolved and bool(caught),
-                f"{len(caught)} hidden tests fail, e.g. {details[patch.stem]['examples'][:2]}",
-            ))
+            checks.append(
+                Check(
+                    f"mutant {patch.stem} is rejected",
+                    not grade.resolved and bool(caught),
+                    f"{len(caught)} hidden tests fail, e.g. {details[patch.stem]['examples'][:2]}",
+                )
+            )
         finally:
             shutil.rmtree(tmp, ignore_errors=True)
     return checks, details
@@ -248,8 +282,9 @@ def verify_task(task: Task, runner: Runner, repeat: int = 1, write: bool = True)
 def format_verification(v: Verification) -> str:
     lines = [f"{v.task_id}: {'VERIFIED' if v.ok else 'FAILED'} (runner: {v.runner})"]
     for c in v.checks:
-        lines.append(f"  [{'ok' if c.ok else 'FAIL'}] {c.name}" + (f"  ({c.detail})" if c.detail
-                                                                   else ""))
+        lines.append(
+            f"  [{'ok' if c.ok else 'FAIL'}] {c.name}" + (f"  ({c.detail})" if c.detail else "")
+        )
     lines.append(f"  start tree: {v.start}")
     lines.append(f"  gold patch: {v.gold}")
     return "\n".join(lines)

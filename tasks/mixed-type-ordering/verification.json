@@ -2,7 +2,7 @@
   "task_id": "mixed-type-ordering",
   "ok": true,
   "runner": "docker",
-  "verified_at": "2026-10-29T10:19:55Z",
+  "verified_at": "2026-10-29T10:28:42Z",
   "checks": [
     {
       "name": "task.md exists",
@@ -103,12 +103,12 @@
   "start": {
     "fail_to_pass": "0/24",
     "pass_to_pass": "34/34",
-    "visible": "991/992"
+    "visible": "991/992 (1 skipped)"
   },
   "gold": {
     "fail_to_pass": "24/24",
     "pass_to_pass": "34/34",
-    "visible": "991/992"
+    "visible": "991/992 (1 skipped)"
   },
   "hidden_test_ids": [
     "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages0-max_by]",
@@ -182,7 +182,7 @@
       "summary": {
         "fail_to_pass": "24/24",
         "pass_to_pass": "30/34",
-        "visible": "991/992"
+        "visible": "991/992 (1 skipped)"
       }
     },
     "comparator-only": {
@@ -196,7 +196,7 @@
       "summary": {
         "fail_to_pass": "15/24",
         "pass_to_pass": "34/34",
-        "visible": "991/992"
+        "visible": "991/992 (1 skipped)"
       }
     }
   }

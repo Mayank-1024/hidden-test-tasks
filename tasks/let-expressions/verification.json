@@ -2,7 +2,7 @@
   "task_id": "let-expressions",
   "ok": true,
   "runner": "docker",
-  "verified_at": "2026-10-29T10:19:48Z",
+  "verified_at": "2026-10-29T10:28:34Z",
   "checks": [
     {
       "name": "task.md exists",
@@ -108,12 +108,12 @@
   "start": {
     "fail_to_pass": "0/35",
     "pass_to_pass": "29/29",
-    "visible": "991/992"
+    "visible": "991/992 (1 skipped)"
   },
   "gold": {
     "fail_to_pass": "35/35",
     "pass_to_pass": "29/29",
-    "visible": "991/992"
+    "visible": "991/992 (1 skipped)"
   },
   "hidden_test_ids": [
     "hidden_tests.test_fail_to_pass::test_bindings_do_not_see_each_other",
@@ -191,7 +191,7 @@
       "summary": {
         "fail_to_pass": "34/35",
         "pass_to_pass": "29/29",
-        "visible": "991/992"
+        "visible": "991/992 (1 skipped)"
       }
     },
     "null-is-undefined": {
@@ -205,7 +205,7 @@
       "summary": {
         "fail_to_pass": "32/35",
         "pass_to_pass": "29/29",
-        "visible": "991/992"
+        "visible": "991/992 (1 skipped)"
       }
     },
     "sequential-bindings": {
@@ -218,7 +218,7 @@
       "summary": {
         "fail_to_pass": "33/35",
         "pass_to_pass": "29/29",
-        "visible": "991/992"
+        "visible": "991/992 (1 skipped)"
       }
     }
   }

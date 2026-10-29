@@ -10,9 +10,8 @@ from collections import OrderedDict
 from decimal import Decimal
 from fractions import Fraction
 
-import pytest
-
 import jmespath
+import pytest
 
 from .corpus import MyDict, MyInt, MyList, MyStr
 
@@ -154,9 +153,7 @@ def test_functions_module_no_longer_defines_the_tables():
 
 def test_visitor_no_longer_defines_type_helpers():
     names = {
-        node.name
-        for node in module_tree("visitor.py").body
-        if isinstance(node, ast.FunctionDef)
+        node.name for node in module_tree("visitor.py").body if isinstance(node, ast.FunctionDef)
     }
     assert not names & {"_is_actual_number", "_is_comparable"}
 

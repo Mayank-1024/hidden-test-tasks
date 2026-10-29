@@ -8,7 +8,6 @@ import json
 import os
 
 import pytest
-
 from jmespath import functions
 
 from .corpus import cases, describe

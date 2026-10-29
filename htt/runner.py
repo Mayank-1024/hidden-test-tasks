@@ -147,8 +147,16 @@ class DockerRunner(Runner):
         )
         if rebuild or not exists:
             subprocess.run(
-                ["docker", "build", "-q", "-t", task.image, "-f", str(task.dockerfile),
-                 str(task.root)],
+                [
+                    "docker",
+                    "build",
+                    "-q",
+                    "-t",
+                    task.image,
+                    "-f",
+                    str(task.dockerfile),
+                    str(task.root),
+                ],
                 check=True,
                 capture_output=True,
             )
@@ -209,6 +217,8 @@ def make_runner(kind: str = "auto") -> Runner:
         return LocalRunner()
     if docker_available():
         return DockerRunner()
-    print("warning: Docker is not running; falling back to LocalRunner (no isolation)",
-          file=sys.stderr)
+    print(
+        "warning: Docker is not running; falling back to LocalRunner (no isolation)",
+        file=sys.stderr,
+    )
     return LocalRunner()

@@ -149,8 +149,9 @@ class Sandbox:
             return "\n".join(shown) + f"\n... ({len(entries) - MAX_LIST_ENTRIES} more)"
         return "\n".join(entries) if entries else "(no files)"
 
-    def read_file(self, path: str, start_line: int | None = None,
-                  end_line: int | None = None) -> str:
+    def read_file(
+        self, path: str, start_line: int | None = None, end_line: int | None = None
+    ) -> str:
         target = self.resolve(path, must_exist=True)
         if not target.is_file():
             raise ToolError(f"not a file: {path!r}")

@@ -83,7 +83,7 @@ EXPRESSIONS = [
     "min_by(v, &k)",
     "map(&type(@), v)",
     "v > `1`",
-    "v <= `\"b\"`",
+    'v <= `"b"`',
     "v == `1`",
     "!v",
     "v[0]",
@@ -91,7 +91,7 @@ EXPRESSIONS = [
     "v[*]",
     "v[]",
     "v[?@ > `1`]",
-    "v || `\"fallback\"`",
+    'v || `"fallback"`',
 ]
 
 
@@ -108,7 +108,7 @@ def describe(expression, value):
 def cases():
     for value_name, value in values():
         for expression in EXPRESSIONS:
-            yield "%s | %s" % (value_name, expression), expression, value
+            yield f"{value_name} | {expression}", expression, value
 
 
 def snapshot():

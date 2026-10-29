@@ -30,8 +30,9 @@ def summarize(attempts: list[dict]) -> dict:
         resolved = sum(1 for a in rows if a["resolved"])
         failed_tests: Counter[str] = Counter()
         for a in rows:
-            failed_tests.update(k for k, v in (a.get("fail_to_pass") or {}).items()
-                                if v != "passed")
+            failed_tests.update(
+                k for k, v in (a.get("fail_to_pass") or {}).items() if v != "passed"
+            )
             failed_tests.update(a.get("failing_pass_to_pass") or [])
         f2p_fracs = [p / t for p, t in (_f2p_counts(a) for a in rows) if t]
         n = len(rows)
@@ -42,7 +43,8 @@ def summarize(attempts: list[dict]) -> dict:
             "resolved": resolved,
             "pass_rate": round(resolved / n, 3) if n else None,
             "mean_fail_to_pass_fraction": round(sum(f2p_fracs) / len(f2p_fracs), 3)
-            if f2p_fracs else None,
+            if f2p_fracs
+            else None,
             "cost_usd": round(sum(a["cost_usd"] for a in rows), 4),
             "mean_cost_usd": round(sum(a["cost_usd"] for a in rows) / n, 4) if n else None,
             "mean_turns": round(sum(a["turns"] for a in rows) / n, 1) if n else None,
@@ -51,16 +53,24 @@ def summarize(attempts: list[dict]) -> dict:
             "stops": dict(Counter(a["stop"] for a in rows)),
             "most_failed_hidden_tests": failed_tests.most_common(8),
         }
-    usage_keys = ("input_tokens", "output_tokens", "cache_creation_input_tokens",
-                  "cache_read_input_tokens", "total_tokens", "calls")
+    usage_keys = (
+        "input_tokens",
+        "output_tokens",
+        "cache_creation_input_tokens",
+        "cache_read_input_tokens",
+        "total_tokens",
+        "calls",
+    )
     totals = {k: sum((a.get("usage") or {}).get(k, 0) for a in graded) for k in usage_keys}
-    totals.update({
-        "attempts": len(graded),
-        "skipped": len(attempts) - len(graded),
-        "resolved": sum(1 for a in graded if a["resolved"]),
-        "cost_usd": round(sum(a["cost_usd"] for a in graded), 4),
-        "solve_s": round(sum(a["solve_s"] for a in graded), 1),
-    })
+    totals.update(
+        {
+            "attempts": len(graded),
+            "skipped": len(attempts) - len(graded),
+            "resolved": sum(1 for a in graded if a["resolved"]),
+            "cost_usd": round(sum(a["cost_usd"] for a in graded), 4),
+            "solve_s": round(sum(a["solve_s"] for a in graded), 1),
+        }
+    )
     return {"per_task": per_task, "totals": totals}
 
 
@@ -77,8 +87,11 @@ def render_markdown(meta: dict, attempts: list[dict], summary: dict) -> str:
         f"- Solver: `{meta.get('solver')}`"
         + (f", model `{cfg.get('model')}`, effort `{cfg.get('effort')}`" if cfg else ""),
         f"- Test runner: `{meta.get('runner')}`"
-        + (" (isolated container, --network none)" if meta.get("runner_isolated")
-           else " (no isolation)"),
+        + (
+            " (isolated container, --network none)"
+            if meta.get("runner_isolated")
+            else " (no isolation)"
+        ),
         f"- Harness commit: `{meta.get('harness_commit')}`",
     ]
     if cfg:
@@ -124,8 +137,9 @@ def render_markdown(meta: dict, attempts: list[dict], summary: dict) -> str:
     ]
     for a in attempts:
         if a["status"] != "graded":
-            lines.append(f"| {a['task_id']} #{a['attempt']} | skipped | | | | {a['stop']} "
-                         f"| | | | | |")
+            lines.append(
+                f"| {a['task_id']} #{a['attempt']} | skipped | | | | {a['stop']} | | | | | |"
+            )
             continue
         s = a["summary"]
         lines.append(
@@ -151,8 +165,9 @@ def write_report(out_dir: Path, meta: dict, attempts: list[Any]) -> Path:
     rows = [_as_dict(a) for a in attempts]
     summary = summarize(rows)
     data = {"meta": meta, "summary": summary, "attempts": rows}
-    (out_dir / "report.json").write_text(json.dumps(data, indent=2, default=str) + "\n",
-                                         encoding="utf-8")
+    (out_dir / "report.json").write_text(
+        json.dumps(data, indent=2, default=str) + "\n", encoding="utf-8"
+    )
     md = out_dir / "report.md"
     md.write_text(render_markdown(meta, rows, summary), encoding="utf-8")
     return md

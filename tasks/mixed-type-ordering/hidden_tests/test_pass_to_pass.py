@@ -3,9 +3,8 @@
 These pass on the starting tree and must still pass after the fix.
 """
 
-import pytest
-
 import jmespath
+import pytest
 from jmespath import exceptions, functions
 
 

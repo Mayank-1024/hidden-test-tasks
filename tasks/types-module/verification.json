@@ -2,7 +2,7 @@
   "task_id": "types-module",
   "ok": true,
   "runner": "docker",
-  "verified_at": "2026-10-29T10:20:27Z",
+  "verified_at": "2026-10-29T10:28:54Z",
   "checks": [
     {
       "name": "task.md exists",
@@ -108,12 +108,12 @@
   "start": {
     "fail_to_pass": "0/41",
     "pass_to_pass": "756/756",
-    "visible": "991/992"
+    "visible": "991/992 (1 skipped)"
   },
   "gold": {
     "fail_to_pass": "41/41",
     "pass_to_pass": "756/756",
-    "visible": "991/992"
+    "visible": "991/992 (1 skipped)"
   },
   "hidden_test_ids": [
     "hidden_tests.test_fail_to_pass::test_functions_module_no_longer_defines_the_tables",
@@ -925,7 +925,7 @@
       "summary": {
         "fail_to_pass": "39/41",
         "pass_to_pass": "756/756",
-        "visible": "991/992"
+        "visible": "991/992 (1 skipped)"
       }
     },
     "isinstance-types": {
@@ -939,7 +939,7 @@
       "summary": {
         "fail_to_pass": "34/41",
         "pass_to_pass": "756/756",
-        "visible": "991/992"
+        "visible": "991/992 (1 skipped)"
       }
     },
     "rewired-type-function": {
@@ -953,7 +953,7 @@
       "summary": {
         "fail_to_pass": "41/41",
         "pass_to_pass": "747/756",
-        "visible": "991/992"
+        "visible": "991/992 (1 skipped)"
       }
     }
   }

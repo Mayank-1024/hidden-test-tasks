@@ -7,9 +7,8 @@ and every test reports its own result.
 import threading
 from collections import OrderedDict
 
-import pytest
-
 import jmespath
+import pytest
 from jmespath import exceptions
 
 PEOPLE = {
@@ -71,8 +70,11 @@ def undefined_variable_error():
         ("let $a = a in let $b = [$a, b] in $b", {"a": 1, "b": 2}, [1, 2]),
         # Shadowing ends with the inner let expression.
         ("let $x = `1` in [let $x = `2` in $x, $x]", {}, [2, 1]),
-        ("let $x = a in [let $x = b in $x, $x, let $y = c in [$x, $y]]",
-         {"a": 1, "b": 2, "c": 3}, [2, 1, [1, 3]]),
+        (
+            "let $x = a in [let $x = b in $x, $x, let $y = c in [$x, $y]]",
+            {"a": 1, "b": 2, "c": 3},
+            [2, 1, [1, 3]],
+        ),
         # Bound to null is not the same as undefined.
         ("let $x = missing in $x", {"a": 1}, None),
         ("let $x = missing in [$x, a]", {"a": 1}, [None, 1]),

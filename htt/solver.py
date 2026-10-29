@@ -99,8 +99,12 @@ def _block_to_dict(block: Any) -> dict:
 
 
 def _usage_dict(usage: Any) -> dict:
-    keys = ("input_tokens", "output_tokens", "cache_creation_input_tokens",
-            "cache_read_input_tokens")
+    keys = (
+        "input_tokens",
+        "output_tokens",
+        "cache_creation_input_tokens",
+        "cache_read_input_tokens",
+    )
     return {k: getattr(usage, k, 0) or 0 for k in keys}
 
 
@@ -154,13 +158,15 @@ class ClaudeSolver:
             out.usage.add(response.usage)
             out.cost_usd = cost_usd(out.usage, cfg.model)
             blocks = [_block_to_dict(b) for b in response.content]
-            out.trajectory.append({
-                "turn": turn,
-                "role": "assistant",
-                "stop_reason": response.stop_reason,
-                "usage": _usage_dict(response.usage),
-                "blocks": blocks,
-            })
+            out.trajectory.append(
+                {
+                    "turn": turn,
+                    "role": "assistant",
+                    "stop_reason": response.stop_reason,
+                    "usage": _usage_dict(response.usage),
+                    "blocks": blocks,
+                }
+            )
             messages.append({"role": "assistant", "content": response.content})
             tool_uses = [b for b in response.content if getattr(b, "type", "") == "tool_use"]
 
@@ -174,35 +180,62 @@ class ClaudeSolver:
 
             if response.stop_reason == "max_tokens":
                 if not tool_uses:
-                    messages.append({"role": "user", "content": (
-                        "Your last response hit the output token limit. Continue, and keep "
-                        "each tool call small (edit_file instead of rewriting large files).")})
-                    out.trajectory.append({"turn": turn, "role": "harness",
-                                           "note": "max_tokens without tool calls"})
+                    messages.append(
+                        {
+                            "role": "user",
+                            "content": (
+                                "Your last response hit the output token limit. Continue, and keep "
+                                "each tool call small (edit_file instead of rewriting large files)."
+                            ),
+                        }
+                    )
+                    out.trajectory.append(
+                        {"turn": turn, "role": "harness", "note": "max_tokens without tool calls"}
+                    )
                     continue
                 # A truncated tool call is never executed.
-                results = [{
-                    "type": "tool_result", "tool_use_id": b.id, "is_error": True,
-                    "content": "This tool call was cut off by the output token limit and was "
-                               "not run. Retry with a smaller edit.",
-                } for b in tool_uses]
+                results = [
+                    {
+                        "type": "tool_result",
+                        "tool_use_id": b.id,
+                        "is_error": True,
+                        "content": "This tool call was cut off by the output token limit and was "
+                        "not run. Retry with a smaller edit.",
+                    }
+                    for b in tool_uses
+                ]
                 messages.append({"role": "user", "content": results})
-                out.trajectory.append({"turn": turn, "role": "tool", "results": [
-                    {"name": b.name, "is_error": True, "content": "truncated; not run"}
-                    for b in tool_uses]})
+                out.trajectory.append(
+                    {
+                        "turn": turn,
+                        "role": "tool",
+                        "results": [
+                            {"name": b.name, "is_error": True, "content": "truncated; not run"}
+                            for b in tool_uses
+                        ],
+                    }
+                )
                 continue
 
             results, traj = [], []
             for b in tool_uses:
                 content, is_error = sandbox.call(b.name, b.input)
-                results.append({"type": "tool_result", "tool_use_id": b.id,
-                                "content": content, "is_error": is_error})
-                traj.append({
-                    "name": b.name,
-                    "input": summarize_input(b.input),
-                    "is_error": is_error,
-                    "content": content[:TOOL_RESULT_TRAJECTORY_CHARS],
-                })
+                results.append(
+                    {
+                        "type": "tool_result",
+                        "tool_use_id": b.id,
+                        "content": content,
+                        "is_error": is_error,
+                    }
+                )
+                traj.append(
+                    {
+                        "name": b.name,
+                        "input": summarize_input(b.input),
+                        "is_error": is_error,
+                        "content": content[:TOOL_RESULT_TRAJECTORY_CHARS],
+                    }
+                )
             messages.append({"role": "user", "content": results})
             out.trajectory.append({"turn": turn, "role": "tool", "results": traj})
 

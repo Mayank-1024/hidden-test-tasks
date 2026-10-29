@@ -3,9 +3,8 @@
 Each one fails on the starting tree (a raw TypeError escapes).
 """
 
-import pytest
-
 import jmespath
+import pytest
 from jmespath import exceptions
 
 MIXED = {
@@ -68,7 +67,7 @@ def test_multiselect_comparisons_are_null():
 def test_by_functions_raise_jmespath_type_error(function_name, ages):
     data = {"people": [{"age": age} for age in ages]}
     with pytest.raises(exceptions.JMESPathTypeError) as info:
-        jmespath.search("%s(people, &age)" % function_name, data)
+        jmespath.search(f"{function_name}(people, &age)", data)
     assert isinstance(info.value, exceptions.JMESPathError)
     assert function_name in str(info.value)
 

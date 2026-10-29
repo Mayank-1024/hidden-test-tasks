@@ -36,8 +36,12 @@ class Usage:
 
     @property
     def total_tokens(self) -> int:
-        return (self.input_tokens + self.output_tokens + self.cache_creation_input_tokens
-                + self.cache_read_input_tokens)
+        return (
+            self.input_tokens
+            + self.output_tokens
+            + self.cache_creation_input_tokens
+            + self.cache_read_input_tokens
+        )
 
     def to_dict(self) -> dict:
         return {**asdict(self), "total_tokens": self.total_tokens}
@@ -69,10 +73,12 @@ def estimate_from_runs(runs_dir: Path, attempts_per_task: int, tasks: int) -> st
     for task_id, values in sorted(costs.items()):
         mean, worst = sum(values) / len(values), max(values)
         total += mean * attempts_per_task
-        lines.append(f"{task_id}: {len(values)} attempts recorded, mean ${mean:.3f}, "
-                     f"max ${worst:.3f}")
+        lines.append(
+            f"{task_id}: {len(values)} attempts recorded, mean ${mean:.3f}, max ${worst:.3f}"
+        )
     missing = tasks - len(costs)
-    lines.append(f"projected for {attempts_per_task} attempts x {len(costs)} tasks: "
-                 f"${total:.2f}" + (f" ({missing} tasks have no recorded attempts)"
-                                    if missing > 0 else ""))
+    lines.append(
+        f"projected for {attempts_per_task} attempts x {len(costs)} tasks: "
+        f"${total:.2f}" + (f" ({missing} tasks have no recorded attempts)" if missing > 0 else "")
+    )
     return "\n".join(lines)

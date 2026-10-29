@@ -67,8 +67,13 @@ def diff_flags(task: Task, diff: str, test_runs: int) -> list[str]:
     flags = []
     if any(f.startswith(f"{VISIBLE_TESTS_DIR}/") for f in files):
         flags.append("touched_visible_tests")
-    outside = [f for f in files if f.split("/", 1)[0] not in task.source_dirs
-               and not f.startswith(f"{VISIBLE_TESTS_DIR}/") and not DOC_FILE.match(f)]
+    outside = [
+        f
+        for f in files
+        if f.split("/", 1)[0] not in task.source_dirs
+        and not f.startswith(f"{VISIBLE_TESTS_DIR}/")
+        and not DOC_FILE.match(f)
+    ]
     if outside:
         flags.append("changed_outside_source:" + ",".join(outside[:5]))
     source_added = []
@@ -76,8 +81,11 @@ def diff_flags(task: Task, diff: str, test_runs: int) -> list[str]:
     for line in diff.splitlines():
         if line.startswith("diff --git "):
             current = line.split(" b/", 1)[1]
-        elif (line.startswith("+") and not line.startswith("+++")
-              and current.split("/", 1)[0] in task.source_dirs):
+        elif (
+            line.startswith("+")
+            and not line.startswith("+++")
+            and current.split("/", 1)[0] in task.source_dirs
+        ):
             source_added.append(line)
     if any(SUSPICIOUS.search(line) for line in source_added):
         flags.append("suspicious_terms_in_source")
@@ -88,8 +96,9 @@ def diff_flags(task: Task, diff: str, test_runs: int) -> list[str]:
     return flags
 
 
-def run_attempt(task: Task, solver: Solver, runner: Runner, index: int, run_dir: Path
-                ) -> AttemptResult:
+def run_attempt(
+    task: Task, solver: Solver, runner: Runner, index: int, run_dir: Path
+) -> AttemptResult:
     tmp = Path(tempfile.mkdtemp(prefix=f"htt-attempt-{task.id}-"))
     try:
         work = materialize(task, tmp / "work")
@@ -106,16 +115,30 @@ def run_attempt(task: Task, solver: Solver, runner: Runner, index: int, run_dir:
         (run_dir / "diffs" / f"{stem}.diff").write_text(diff, encoding="utf-8")
         traj_path = run_dir / "trajectories" / f"{stem}.json"
         traj_path.parent.mkdir(parents=True, exist_ok=True)
-        traj_path.write_text(json.dumps({
-            "task_id": task.id, "attempt": index, "solver": solver.name, "model": outcome.model,
-            "stop": outcome.stop, "events": outcome.trajectory,
-            "grade_output_tail": grade.output_tail,
-        }, indent=1, default=str) + "\n", encoding="utf-8")
+        traj_path.write_text(
+            json.dumps(
+                {
+                    "task_id": task.id,
+                    "attempt": index,
+                    "solver": solver.name,
+                    "model": outcome.model,
+                    "stop": outcome.stop,
+                    "events": outcome.trajectory,
+                    "grade_output_tail": grade.output_tail,
+                },
+                indent=1,
+                default=str,
+            )
+            + "\n",
+            encoding="utf-8",
+        )
 
-        added = sum(1 for line in diff.splitlines()
-                    if line.startswith("+") and not line.startswith("+++"))
-        removed = sum(1 for line in diff.splitlines()
-                      if line.startswith("-") and not line.startswith("---"))
+        added = sum(
+            1 for line in diff.splitlines() if line.startswith("+") and not line.startswith("+++")
+        )
+        removed = sum(
+            1 for line in diff.splitlines() if line.startswith("-") and not line.startswith("---")
+        )
         return AttemptResult(
             task_id=task.id,
             kind=task.kind,
@@ -134,8 +157,9 @@ def run_attempt(task: Task, solver: Solver, runner: Runner, index: int, run_dir:
             summary=grade.summary(),
             fail_to_pass=grade.fail_to_pass,
             failing_pass_to_pass=sorted(k for k, v in grade.pass_to_pass.items() if v != "passed"),
-            failing_visible=sorted(k for k, v in grade.visible.items()
-                                   if v not in ("passed", "skipped")),
+            failing_visible=sorted(
+                k for k, v in grade.visible.items() if v not in ("passed", "skipped")
+            ),
             missing_tests=grade.missing,
             changed_files=changed_files(diff),
             lines_added=added,
@@ -150,8 +174,13 @@ def run_attempt(task: Task, solver: Solver, runner: Runner, index: int, run_dir:
 
 
 def _git_commit() -> str:
-    proc = subprocess.run(["git", "rev-parse", "--short", "HEAD"], cwd=REPO_ROOT,
-                          capture_output=True, text=True, check=False)
+    proc = subprocess.run(
+        ["git", "rev-parse", "--short", "HEAD"],
+        cwd=REPO_ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
     return proc.stdout.strip() or "unknown"
 
 
@@ -193,16 +222,27 @@ def run_attempts(
     for index in range(1, attempts + 1):
         for task in tasks:
             if budget_usd is not None and spent >= budget_usd:
-                results.append(AttemptResult(task.id, task.kind, index, solver_kind,
-                                             config.model, status="skipped",
-                                             stop="run budget reached"))
+                results.append(
+                    AttemptResult(
+                        task.id,
+                        task.kind,
+                        index,
+                        solver_kind,
+                        config.model,
+                        status="skipped",
+                        stop="run budget reached",
+                    )
+                )
                 continue
             result = run_attempt(task, solver, runner, index, out_dir)
             spent += result.cost_usd
             results.append(result)
-            print(f"[{task.id} #{index}] resolved={result.resolved} stop={result.stop} "
-                  f"turns={result.turns} cost=${result.cost_usd:.3f} spent=${spent:.2f} "
-                  f"hidden={result.summary}", flush=True)
+            print(
+                f"[{task.id} #{index}] resolved={result.resolved} stop={result.stop} "
+                f"turns={result.turns} cost=${result.cost_usd:.3f} spent=${spent:.2f} "
+                f"hidden={result.summary}",
+                flush=True,
+            )
             # Write as we go, so a crash keeps the finished attempts.
             write_report(out_dir, meta, results)
     meta["finished_at"] = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")

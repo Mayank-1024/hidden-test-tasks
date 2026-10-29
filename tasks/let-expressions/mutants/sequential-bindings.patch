@@ -1,0 +1,246 @@
+diff --git a/CHANGELOG.rst b/CHANGELOG.rst
+index dc673df..e39a6fe 100644
+--- a/CHANGELOG.rst
++++ b/CHANGELOG.rst
+@@ -1,7 +1,8 @@
+ Next Release (TBD)
+ ==================
+ 
+-* No changes yet.
++* Add let expressions and variable references for lexical scoping
++  (``let $x = expr in body``).
+ 
+ 
+ 1.1.0
+diff --git a/jmespath/ast.py b/jmespath/ast.py
+index dd56c6e..c88a9ae 100644
+--- a/jmespath/ast.py
++++ b/jmespath/ast.py
+@@ -88,3 +88,16 @@ def slice(start, end, step):
+ 
+ def value_projection(left, right):
+     return {'type': 'value_projection', 'children': [left, right]}
++
++
++def let_expression(bindings, expression):
++    # children: the variable_binding nodes followed by the body.
++    return {'type': 'let_expression', 'children': bindings + [expression]}
++
++
++def variable_binding(name, expression):
++    return {'type': 'variable_binding', 'children': [expression], 'value': name}
++
++
++def variable_ref(name):
++    return {'type': 'variable_ref', 'children': [], 'value': name}
+diff --git a/jmespath/exceptions.py b/jmespath/exceptions.py
+index 0156015..69d352f 100644
+--- a/jmespath/exceptions.py
++++ b/jmespath/exceptions.py
+@@ -120,3 +120,10 @@ class EmptyExpressionError(JMESPathError):
+ 
+ class UnknownFunctionError(JMESPathError):
+     pass
++
++
++class UndefinedVariableError(JMESPathError):
++    def __init__(self, varname):
++        self.varname = varname
++        super(UndefinedVariableError, self).__init__(
++            "Reference to undefined variable: $%s" % varname)
+diff --git a/jmespath/lexer.py b/jmespath/lexer.py
+index 8db05e3..c7ebe03 100644
+--- a/jmespath/lexer.py
++++ b/jmespath/lexer.py
+@@ -80,6 +80,8 @@ class Lexer(object):
+                                      message="Unknown token '%s'" % buff)
+             elif self._current == '"':
+                 yield self._consume_quoted_identifier()
++            elif self._current == '$':
++                yield self._consume_variable()
+             elif self._current == '<':
+                 yield self._match_or_else('=', 'lte', 'lt')
+             elif self._current == '>':
+@@ -92,6 +94,9 @@ class Lexer(object):
+                         'start': self._position - 1, 'end': self._position}
+                     self._next()
+                 else:
++                    # A single '=' only appears in a let binding
++                    # ("let $x = expr in ..."). The parser rejects it
++                    # anywhere else.
+                     if self._current is None:
+                         # If we're at the EOF, we never advanced
+                         # the position so we don't need to rewind
+@@ -99,10 +104,8 @@ class Lexer(object):
+                         position = self._position
+                     else:
+                         position = self._position - 1
+-                    raise LexerError(
+-                        lexer_position=position,
+-                        lexer_value='=',
+-                        message="Unknown token '='")
++                    yield {'type': 'assign', 'value': '=',
++                           'start': position, 'end': position + 1}
+             else:
+                 raise LexerError(lexer_position=self._position,
+                                  lexer_value=self._current,
+@@ -110,6 +113,21 @@ class Lexer(object):
+         yield {'type': 'eof', 'value': '',
+                'start': self._length, 'end': self._length}
+ 
++    def _consume_variable(self):
++        # A variable reference is '$' immediately followed by an
++        # unquoted identifier, e.g. "$foo".
++        start = self._position
++        next_char = self._next()
++        if next_char is None or next_char not in self.START_IDENTIFIER:
++            raise LexerError(lexer_position=start,
++                             lexer_value='$',
++                             message="Expected an identifier after '$'")
++        buff = next_char
++        while self._next() in self.VALID_IDENTIFIER:
++            buff += self._current
++        return {'type': 'variable', 'value': buff,
++                'start': start, 'end': start + len(buff) + 1}
++
+     def _consume_number(self):
+         start = self._position
+         buff = self._current
+diff --git a/jmespath/parser.py b/jmespath/parser.py
+index cc8e804..bb43d03 100644
+--- a/jmespath/parser.py
++++ b/jmespath/parser.py
+@@ -46,6 +46,8 @@ class Parser(object):
+         'current': 0,
+         'expref': 0,
+         'colon': 0,
++        'variable': 0,
++        'assign': 0,
+         'pipe': 1,
+         'or': 2,
+         'and': 3,
+@@ -149,8 +151,43 @@ class Parser(object):
+         return ast.literal(token['value'])
+ 
+     def _token_nud_unquoted_identifier(self, token):
++        # "let" is not a reserved word. It only starts a let expression
++        # when a variable follows it, so "let" and "foo.let" are still
++        # plain field lookups.
++        if token['value'] == 'let' and self._current_token() == 'variable':
++            return self._parse_let_expression()
+         return ast.field(token['value'])
+ 
++    def _token_nud_variable(self, token):
++        return ast.variable_ref(token['value'])
++
++    def _parse_let_expression(self):
++        # let $a = expr, $b = expr in body
++        #     ^
++        #     | current token
++        bindings = []
++        while True:
++            variable = self._lookahead_token(0)
++            self._match('variable')
++            self._match('assign')
++            # Binding power 0: a binding ends at the next top-level
++            # ',' or 'in' (both have binding power 0).
++            value = self._expression(0)
++            bindings.append(ast.variable_binding(variable['value'], value))
++            if self._current_token() == 'comma':
++                self._match('comma')
++            else:
++                break
++        keyword = self._lookahead_token(0)
++        if not (keyword['type'] == 'unquoted_identifier' and
++                keyword['value'] == 'in'):
++            self._raise_parse_error_maybe_eof('in', keyword)
++        self._advance()
++        # The body extends as far right as possible ("let $x = a in b | c"
++        # is "let $x = a in (b | c)").
++        body = self._expression(0)
++        return ast.let_expression(bindings, body)
++
+     def _token_nud_quoted_identifier(self, token):
+         field = ast.field(token['value'])
+         # You can't have a quoted identifier as a function
+diff --git a/jmespath/visitor.py b/jmespath/visitor.py
+index 15fb177..c7c982b 100644
+--- a/jmespath/visitor.py
++++ b/jmespath/visitor.py
+@@ -1,5 +1,7 @@
+ import operator
++from collections import ChainMap
+ 
++from jmespath import exceptions
+ from jmespath import functions
+ from jmespath.compat import string_type
+ from numbers import Number
+@@ -72,12 +74,20 @@ class Options(object):
+ 
+ 
+ class _Expression(object):
+-    def __init__(self, expression, interpreter):
++    def __init__(self, expression, interpreter, scope=None):
+         self.expression = expression
+         self.interpreter = interpreter
++        # The variables in scope where the expref was written. They are
++        # restored whenever the expref is evaluated, so "&$x" sees the
++        # $x of its own let expression even if a function evaluates it
++        # later from somewhere else.
++        self.scope = scope
+ 
+     def visit(self, node, *args, **kwargs):
+-        return self.interpreter.visit(node, *args, **kwargs)
++        if self.scope is None:
++            return self.interpreter.visit(node, *args, **kwargs)
++        return self.interpreter.visit_in_scope(
++            self.scope, node, *args, **kwargs)
+ 
+ 
+ class Visitor(object):
+@@ -121,10 +131,36 @@ class TreeInterpreter(Visitor):
+             self._functions = self._options.custom_functions
+         else:
+             self._functions = functions.Functions()
++        # Variables bound by enclosing let expressions, innermost first.
++        self._scope = ChainMap()
+ 
+     def default_visit(self, node, *args, **kwargs):
+         raise NotImplementedError(node['type'])
+ 
++    def visit_in_scope(self, scope, node, *args, **kwargs):
++        saved = self._scope
++        self._scope = scope
++        try:
++            return self.visit(node, *args, **kwargs)
++        finally:
++            self._scope = saved
++
++    def visit_let_expression(self, node, value):
++        # Every binding is evaluated against the current node in the
++        # enclosing scope, so bindings in one let cannot see each other.
++        bindings = {}
++        scope = self._scope.new_child(bindings)
++        for binding in node['children'][:-1]:
++            bindings[binding['value']] = self.visit_in_scope(
++                scope, binding['children'][0], value)
++        return self.visit_in_scope(scope, node['children'][-1], value)
++
++    def visit_variable_ref(self, node, value):
++        try:
++            return self._scope[node['value']]
++        except KeyError:
++            raise exceptions.UndefinedVariableError(node['value'])
++
+     def visit_subexpression(self, node, value):
+         result = value
+         for node in node['children']:
+@@ -161,7 +197,7 @@ class TreeInterpreter(Visitor):
+         return value
+ 
+     def visit_expref(self, node, value):
+-        return _Expression(node['children'][0], self)
++        return _Expression(node['children'][0], self, self._scope)
+ 
+     def visit_function_expression(self, node, value):
+         resolved_args = []

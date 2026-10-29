@@ -1,0 +1,6 @@
+id = "types-module"
+kind = "refactor"
+title = "Move the JMESPath type model into jmespath/types.py"
+base = "../../upstream/jmespath"
+source_dirs = ["jmespath"]
+timeout_seconds = 120

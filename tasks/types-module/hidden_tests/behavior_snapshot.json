@@ -1,0 +1,2994 @@
+{
+ "bools | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "bools | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: [True, False], expected one of: ['number'], received: \"array\""
+ },
+ "bools | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: True, expected one of: ['array-number'], received: \"bool\""
+ },
+ "bools | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: [True, False], expected one of: ['number'], received: \"array\""
+ },
+ "bools | contains(v, 'a')": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "bools | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: True, expected one of: ['array-string'], received: \"bool\""
+ },
+ "bools | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: [True, False], expected one of: ['object'], received: \"array\""
+ },
+ "bools | length(v)": {
+  "repr": "2",
+  "type": "int"
+ },
+ "bools | map(&type(@), v)": {
+  "repr": "['boolean', 'boolean']",
+  "type": "list"
+ },
+ "bools | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: True, expected one of: ['array-number', 'array-string'], received: \"bool\""
+ },
+ "bools | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: True, expected one of: ['number', 'string'], received: \"boolean\""
+ },
+ "bools | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: [True, False], expected one of: ['object'], received: \"array\""
+ },
+ "bools | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: True, expected one of: ['array-number', 'array-string'], received: \"bool\""
+ },
+ "bools | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: None, expected one of: ['number', 'string'], received: \"null\""
+ },
+ "bools | not_null(v)": {
+  "repr": "[True, False]",
+  "type": "list"
+ },
+ "bools | reverse(v)": {
+  "repr": "[False, True]",
+  "type": "list"
+ },
+ "bools | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: True, expected one of: ['array-string', 'array-number'], received: \"bool\""
+ },
+ "bools | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: True, expected one of: ['string', 'number'], received: \"boolean\""
+ },
+ "bools | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: [True, False], expected one of: ['string'], received: \"array\""
+ },
+ "bools | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: True, expected one of: ['array-number'], received: \"bool\""
+ },
+ "bools | to_array(v)": {
+  "repr": "[True, False]",
+  "type": "list"
+ },
+ "bools | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "bools | to_string(v)": {
+  "repr": "'[true,false]'",
+  "type": "str"
+ },
+ "bools | type(v)": {
+  "repr": "'array'",
+  "type": "str"
+ },
+ "bools | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "bools | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "bools | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "bools | v || `\"fallback\"`": {
+  "repr": "[True, False]",
+  "type": "list"
+ },
+ "bools | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "bools | v[*]": {
+  "repr": "[True, False]",
+  "type": "list"
+ },
+ "bools | v[0]": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "bools | v[?@ > `1`]": {
+  "repr": "[]",
+  "type": "list"
+ },
+ "bools | v[]": {
+  "repr": "[True, False]",
+  "type": "list"
+ },
+ "bools | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: [True, False], expected one of: ['object'], received: \"array\""
+ },
+ "decimal | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "decimal | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: 2.5, expected one of: ['number'], received: \"unknown\""
+ },
+ "decimal | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: 2.5, expected one of: ['array-number'], received: \"unknown\""
+ },
+ "decimal | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: 2.5, expected one of: ['number'], received: \"unknown\""
+ },
+ "decimal | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: 2.5, expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "decimal | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: 2.5, expected one of: ['array-string'], received: \"unknown\""
+ },
+ "decimal | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: 2.5, expected one of: ['object'], received: \"unknown\""
+ },
+ "decimal | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: 2.5, expected one of: ['string', 'array', 'object'], received: \"unknown\""
+ },
+ "decimal | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: 2.5, expected one of: ['array'], received: \"unknown\""
+ },
+ "decimal | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: 2.5, expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "decimal | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: 2.5, expected one of: ['array'], received: \"unknown\""
+ },
+ "decimal | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: 2.5, expected one of: ['object'], received: \"unknown\""
+ },
+ "decimal | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: 2.5, expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "decimal | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: 2.5, expected one of: ['array'], received: \"unknown\""
+ },
+ "decimal | not_null(v)": {
+  "repr": "Decimal('2.5')",
+  "type": "Decimal"
+ },
+ "decimal | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: 2.5, expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "decimal | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: 2.5, expected one of: ['array-string', 'array-number'], received: \"unknown\""
+ },
+ "decimal | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: 2.5, expected one of: ['array'], received: \"unknown\""
+ },
+ "decimal | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: 2.5, expected one of: ['string'], received: \"unknown\""
+ },
+ "decimal | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: 2.5, expected one of: ['array-number'], received: \"unknown\""
+ },
+ "decimal | to_array(v)": {
+  "repr": "[Decimal('2.5')]",
+  "type": "list"
+ },
+ "decimal | to_number(v)": {
+  "repr": "2",
+  "type": "int"
+ },
+ "decimal | to_string(v)": {
+  "repr": "'\"2.5\"'",
+  "type": "str"
+ },
+ "decimal | type(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "decimal | v <= `\"b\"`": {
+  "error": "TypeError",
+  "message": "'<=' not supported between instances of 'decimal.Decimal' and 'str'"
+ },
+ "decimal | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "decimal | v > `1`": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "decimal | v || `\"fallback\"`": {
+  "repr": "Decimal('2.5')",
+  "type": "Decimal"
+ },
+ "decimal | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "decimal | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "decimal | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "decimal | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "decimal | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "decimal | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: 2.5, expected one of: ['object'], received: \"unknown\""
+ },
+ "decimals | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "decimals | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: [Decimal('2'), Decimal('1')], expected one of: ['number'], received: \"array\""
+ },
+ "decimals | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: 2, expected one of: ['array-number'], received: \"Decimal\""
+ },
+ "decimals | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: [Decimal('2'), Decimal('1')], expected one of: ['number'], received: \"array\""
+ },
+ "decimals | contains(v, 'a')": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "decimals | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: 2, expected one of: ['array-string'], received: \"Decimal\""
+ },
+ "decimals | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: [Decimal('2'), Decimal('1')], expected one of: ['object'], received: \"array\""
+ },
+ "decimals | length(v)": {
+  "repr": "2",
+  "type": "int"
+ },
+ "decimals | map(&type(@), v)": {
+  "repr": "[None, None]",
+  "type": "list"
+ },
+ "decimals | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: 2, expected one of: ['array-number', 'array-string'], received: \"Decimal\""
+ },
+ "decimals | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: 2, expected one of: ['number', 'string'], received: \"unknown\""
+ },
+ "decimals | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: [Decimal('2'), Decimal('1')], expected one of: ['object'], received: \"array\""
+ },
+ "decimals | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: 2, expected one of: ['array-number', 'array-string'], received: \"Decimal\""
+ },
+ "decimals | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: None, expected one of: ['number', 'string'], received: \"null\""
+ },
+ "decimals | not_null(v)": {
+  "repr": "[Decimal('2'), Decimal('1')]",
+  "type": "list"
+ },
+ "decimals | reverse(v)": {
+  "repr": "[Decimal('1'), Decimal('2')]",
+  "type": "list"
+ },
+ "decimals | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: 2, expected one of: ['array-string', 'array-number'], received: \"Decimal\""
+ },
+ "decimals | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: 2, expected one of: ['string', 'number'], received: \"unknown\""
+ },
+ "decimals | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: [Decimal('2'), Decimal('1')], expected one of: ['string'], received: \"array\""
+ },
+ "decimals | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: 2, expected one of: ['array-number'], received: \"Decimal\""
+ },
+ "decimals | to_array(v)": {
+  "repr": "[Decimal('2'), Decimal('1')]",
+  "type": "list"
+ },
+ "decimals | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "decimals | to_string(v)": {
+  "repr": "'[\"2\",\"1\"]'",
+  "type": "str"
+ },
+ "decimals | type(v)": {
+  "repr": "'array'",
+  "type": "str"
+ },
+ "decimals | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "decimals | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "decimals | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "decimals | v || `\"fallback\"`": {
+  "repr": "[Decimal('2'), Decimal('1')]",
+  "type": "list"
+ },
+ "decimals | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "decimals | v[*]": {
+  "repr": "[Decimal('2'), Decimal('1')]",
+  "type": "list"
+ },
+ "decimals | v[0]": {
+  "repr": "Decimal('2')",
+  "type": "Decimal"
+ },
+ "decimals | v[?@ > `1`]": {
+  "repr": "[Decimal('2')]",
+  "type": "list"
+ },
+ "decimals | v[]": {
+  "repr": "[Decimal('2'), Decimal('1')]",
+  "type": "list"
+ },
+ "decimals | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: [Decimal('2'), Decimal('1')], expected one of: ['object'], received: \"array\""
+ },
+ "dict | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "dict | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: {'a': 1}, expected one of: ['number'], received: \"object\""
+ },
+ "dict | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: {'a': 1}, expected one of: ['array-number'], received: \"object\""
+ },
+ "dict | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: {'a': 1}, expected one of: ['number'], received: \"object\""
+ },
+ "dict | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: {'a': 1}, expected one of: ['array', 'string'], received: \"object\""
+ },
+ "dict | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: {'a': 1}, expected one of: ['array-string'], received: \"object\""
+ },
+ "dict | keys(v)": {
+  "repr": "['a']",
+  "type": "list"
+ },
+ "dict | length(v)": {
+  "repr": "1",
+  "type": "int"
+ },
+ "dict | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: {'a': 1}, expected one of: ['array'], received: \"object\""
+ },
+ "dict | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: {'a': 1}, expected one of: ['array-number', 'array-string'], received: \"object\""
+ },
+ "dict | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: {'a': 1}, expected one of: ['array'], received: \"object\""
+ },
+ "dict | merge(v, `{}`)": {
+  "repr": "{'a': 1}",
+  "type": "dict"
+ },
+ "dict | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: {'a': 1}, expected one of: ['array-number', 'array-string'], received: \"object\""
+ },
+ "dict | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: {'a': 1}, expected one of: ['array'], received: \"object\""
+ },
+ "dict | not_null(v)": {
+  "repr": "{'a': 1}",
+  "type": "dict"
+ },
+ "dict | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: {'a': 1}, expected one of: ['array', 'string'], received: \"object\""
+ },
+ "dict | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: {'a': 1}, expected one of: ['array-string', 'array-number'], received: \"object\""
+ },
+ "dict | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: {'a': 1}, expected one of: ['array'], received: \"object\""
+ },
+ "dict | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: {'a': 1}, expected one of: ['string'], received: \"object\""
+ },
+ "dict | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: {'a': 1}, expected one of: ['array-number'], received: \"object\""
+ },
+ "dict | to_array(v)": {
+  "repr": "[{'a': 1}]",
+  "type": "list"
+ },
+ "dict | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict | to_string(v)": {
+  "repr": "'{\"a\":1}'",
+  "type": "str"
+ },
+ "dict | type(v)": {
+  "repr": "'object'",
+  "type": "str"
+ },
+ "dict | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "dict | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict | v || `\"fallback\"`": {
+  "repr": "{'a': 1}",
+  "type": "dict"
+ },
+ "dict | v.a": {
+  "repr": "1",
+  "type": "int"
+ },
+ "dict | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict | values(v)": {
+  "repr": "[1]",
+  "type": "list"
+ },
+ "dict_list | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "dict_list | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: [{'k': Decimal('1')}, {'k': 2}], expected one of: ['number'], received: \"array\""
+ },
+ "dict_list | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: {'k': Decimal('1')}, expected one of: ['array-number'], received: \"dict\""
+ },
+ "dict_list | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: [{'k': Decimal('1')}, {'k': 2}], expected one of: ['number'], received: \"array\""
+ },
+ "dict_list | contains(v, 'a')": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "dict_list | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: {'k': Decimal('1')}, expected one of: ['array-string'], received: \"dict\""
+ },
+ "dict_list | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: [{'k': Decimal('1')}, {'k': 2}], expected one of: ['object'], received: \"array\""
+ },
+ "dict_list | length(v)": {
+  "repr": "2",
+  "type": "int"
+ },
+ "dict_list | map(&type(@), v)": {
+  "repr": "['object', 'object']",
+  "type": "list"
+ },
+ "dict_list | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: {'k': Decimal('1')}, expected one of: ['array-number', 'array-string'], received: \"dict\""
+ },
+ "dict_list | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: {'k': Decimal('1')}, expected one of: ['number', 'string'], received: \"object\""
+ },
+ "dict_list | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: [{'k': Decimal('1')}, {'k': 2}], expected one of: ['object'], received: \"array\""
+ },
+ "dict_list | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: {'k': Decimal('1')}, expected one of: ['array-number', 'array-string'], received: \"dict\""
+ },
+ "dict_list | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: 1, expected one of: ['number', 'string'], received: \"unknown\""
+ },
+ "dict_list | not_null(v)": {
+  "repr": "[{'k': Decimal('1')}, {'k': 2}]",
+  "type": "list"
+ },
+ "dict_list | reverse(v)": {
+  "repr": "[{'k': 2}, {'k': Decimal('1')}]",
+  "type": "list"
+ },
+ "dict_list | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: {'k': Decimal('1')}, expected one of: ['array-string', 'array-number'], received: \"dict\""
+ },
+ "dict_list | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: {'k': Decimal('1')}, expected one of: ['string', 'number'], received: \"object\""
+ },
+ "dict_list | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: [{'k': Decimal('1')}, {'k': 2}], expected one of: ['string'], received: \"array\""
+ },
+ "dict_list | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: {'k': Decimal('1')}, expected one of: ['array-number'], received: \"dict\""
+ },
+ "dict_list | to_array(v)": {
+  "repr": "[{'k': Decimal('1')}, {'k': 2}]",
+  "type": "list"
+ },
+ "dict_list | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict_list | to_string(v)": {
+  "repr": "'[{\"k\":\"1\"},{\"k\":2}]'",
+  "type": "str"
+ },
+ "dict_list | type(v)": {
+  "repr": "'array'",
+  "type": "str"
+ },
+ "dict_list | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict_list | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "dict_list | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict_list | v || `\"fallback\"`": {
+  "repr": "[{'k': Decimal('1')}, {'k': 2}]",
+  "type": "list"
+ },
+ "dict_list | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "dict_list | v[*]": {
+  "repr": "[{'k': Decimal('1')}, {'k': 2}]",
+  "type": "list"
+ },
+ "dict_list | v[0]": {
+  "repr": "{'k': Decimal('1')}",
+  "type": "dict"
+ },
+ "dict_list | v[?@ > `1`]": {
+  "repr": "[]",
+  "type": "list"
+ },
+ "dict_list | v[]": {
+  "repr": "[{'k': Decimal('1')}, {'k': 2}]",
+  "type": "list"
+ },
+ "dict_list | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: [{'k': Decimal('1')}, {'k': 2}], expected one of: ['object'], received: \"array\""
+ },
+ "float | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "float | abs(v)": {
+  "repr": "1.5",
+  "type": "float"
+ },
+ "float | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: 1.5, expected one of: ['array-number'], received: \"number\""
+ },
+ "float | ceil(v)": {
+  "repr": "2",
+  "type": "int"
+ },
+ "float | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: 1.5, expected one of: ['array', 'string'], received: \"number\""
+ },
+ "float | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: 1.5, expected one of: ['array-string'], received: \"number\""
+ },
+ "float | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: 1.5, expected one of: ['object'], received: \"number\""
+ },
+ "float | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: 1.5, expected one of: ['string', 'array', 'object'], received: \"number\""
+ },
+ "float | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: 1.5, expected one of: ['array'], received: \"number\""
+ },
+ "float | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: 1.5, expected one of: ['array-number', 'array-string'], received: \"number\""
+ },
+ "float | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: 1.5, expected one of: ['array'], received: \"number\""
+ },
+ "float | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: 1.5, expected one of: ['object'], received: \"number\""
+ },
+ "float | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: 1.5, expected one of: ['array-number', 'array-string'], received: \"number\""
+ },
+ "float | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: 1.5, expected one of: ['array'], received: \"number\""
+ },
+ "float | not_null(v)": {
+  "repr": "1.5",
+  "type": "float"
+ },
+ "float | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: 1.5, expected one of: ['array', 'string'], received: \"number\""
+ },
+ "float | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: 1.5, expected one of: ['array-string', 'array-number'], received: \"number\""
+ },
+ "float | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: 1.5, expected one of: ['array'], received: \"number\""
+ },
+ "float | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: 1.5, expected one of: ['string'], received: \"number\""
+ },
+ "float | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: 1.5, expected one of: ['array-number'], received: \"number\""
+ },
+ "float | to_array(v)": {
+  "repr": "[1.5]",
+  "type": "list"
+ },
+ "float | to_number(v)": {
+  "repr": "1.5",
+  "type": "float"
+ },
+ "float | to_string(v)": {
+  "repr": "'1.5'",
+  "type": "str"
+ },
+ "float | type(v)": {
+  "repr": "'number'",
+  "type": "str"
+ },
+ "float | v <= `\"b\"`": {
+  "error": "TypeError",
+  "message": "'<=' not supported between instances of 'float' and 'str'"
+ },
+ "float | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "float | v > `1`": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "float | v || `\"fallback\"`": {
+  "repr": "1.5",
+  "type": "float"
+ },
+ "float | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "float | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "float | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "float | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "float | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "float | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: 1.5, expected one of: ['object'], received: \"number\""
+ },
+ "fraction | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "fraction | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: 1/3, expected one of: ['number'], received: \"unknown\""
+ },
+ "fraction | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: 1/3, expected one of: ['array-number'], received: \"unknown\""
+ },
+ "fraction | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: 1/3, expected one of: ['number'], received: \"unknown\""
+ },
+ "fraction | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: 1/3, expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "fraction | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: 1/3, expected one of: ['array-string'], received: \"unknown\""
+ },
+ "fraction | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: 1/3, expected one of: ['object'], received: \"unknown\""
+ },
+ "fraction | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: 1/3, expected one of: ['string', 'array', 'object'], received: \"unknown\""
+ },
+ "fraction | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: 1/3, expected one of: ['array'], received: \"unknown\""
+ },
+ "fraction | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: 1/3, expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "fraction | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: 1/3, expected one of: ['array'], received: \"unknown\""
+ },
+ "fraction | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: 1/3, expected one of: ['object'], received: \"unknown\""
+ },
+ "fraction | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: 1/3, expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "fraction | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: 1/3, expected one of: ['array'], received: \"unknown\""
+ },
+ "fraction | not_null(v)": {
+  "repr": "Fraction(1, 3)",
+  "type": "Fraction"
+ },
+ "fraction | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: 1/3, expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "fraction | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: 1/3, expected one of: ['array-string', 'array-number'], received: \"unknown\""
+ },
+ "fraction | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: 1/3, expected one of: ['array'], received: \"unknown\""
+ },
+ "fraction | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: 1/3, expected one of: ['string'], received: \"unknown\""
+ },
+ "fraction | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: 1/3, expected one of: ['array-number'], received: \"unknown\""
+ },
+ "fraction | to_array(v)": {
+  "repr": "[Fraction(1, 3)]",
+  "type": "list"
+ },
+ "fraction | to_number(v)": {
+  "repr": "0",
+  "type": "int"
+ },
+ "fraction | to_string(v)": {
+  "repr": "'\"1/3\"'",
+  "type": "str"
+ },
+ "fraction | type(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "fraction | v <= `\"b\"`": {
+  "error": "TypeError",
+  "message": "'<=' not supported between instances of 'Fraction' and 'str'"
+ },
+ "fraction | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "fraction | v > `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "fraction | v || `\"fallback\"`": {
+  "repr": "Fraction(1, 3)",
+  "type": "Fraction"
+ },
+ "fraction | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "fraction | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "fraction | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "fraction | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "fraction | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "fraction | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: 1/3, expected one of: ['object'], received: \"unknown\""
+ },
+ "int | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "int | abs(v)": {
+  "repr": "1",
+  "type": "int"
+ },
+ "int | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: 1, expected one of: ['array-number'], received: \"number\""
+ },
+ "int | ceil(v)": {
+  "repr": "1",
+  "type": "int"
+ },
+ "int | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: 1, expected one of: ['array', 'string'], received: \"number\""
+ },
+ "int | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: 1, expected one of: ['array-string'], received: \"number\""
+ },
+ "int | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: 1, expected one of: ['object'], received: \"number\""
+ },
+ "int | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: 1, expected one of: ['string', 'array', 'object'], received: \"number\""
+ },
+ "int | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: 1, expected one of: ['array'], received: \"number\""
+ },
+ "int | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: 1, expected one of: ['array-number', 'array-string'], received: \"number\""
+ },
+ "int | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: 1, expected one of: ['array'], received: \"number\""
+ },
+ "int | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: 1, expected one of: ['object'], received: \"number\""
+ },
+ "int | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: 1, expected one of: ['array-number', 'array-string'], received: \"number\""
+ },
+ "int | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: 1, expected one of: ['array'], received: \"number\""
+ },
+ "int | not_null(v)": {
+  "repr": "1",
+  "type": "int"
+ },
+ "int | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: 1, expected one of: ['array', 'string'], received: \"number\""
+ },
+ "int | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: 1, expected one of: ['array-string', 'array-number'], received: \"number\""
+ },
+ "int | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: 1, expected one of: ['array'], received: \"number\""
+ },
+ "int | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: 1, expected one of: ['string'], received: \"number\""
+ },
+ "int | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: 1, expected one of: ['array-number'], received: \"number\""
+ },
+ "int | to_array(v)": {
+  "repr": "[1]",
+  "type": "list"
+ },
+ "int | to_number(v)": {
+  "repr": "1",
+  "type": "int"
+ },
+ "int | to_string(v)": {
+  "repr": "'1'",
+  "type": "str"
+ },
+ "int | type(v)": {
+  "repr": "'number'",
+  "type": "str"
+ },
+ "int | v <= `\"b\"`": {
+  "error": "TypeError",
+  "message": "'<=' not supported between instances of 'int' and 'str'"
+ },
+ "int | v == `1`": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "int | v > `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "int | v || `\"fallback\"`": {
+  "repr": "1",
+  "type": "int"
+ },
+ "int | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "int | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "int | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "int | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "int | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "int | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: 1, expected one of: ['object'], received: \"number\""
+ },
+ "list | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "list | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: [3, 1, 2], expected one of: ['number'], received: \"array\""
+ },
+ "list | avg(v)": {
+  "repr": "2.0",
+  "type": "float"
+ },
+ "list | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: [3, 1, 2], expected one of: ['number'], received: \"array\""
+ },
+ "list | contains(v, 'a')": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "list | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: 3, expected one of: ['array-string'], received: \"int\""
+ },
+ "list | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: [3, 1, 2], expected one of: ['object'], received: \"array\""
+ },
+ "list | length(v)": {
+  "repr": "3",
+  "type": "int"
+ },
+ "list | map(&type(@), v)": {
+  "repr": "['number', 'number', 'number']",
+  "type": "list"
+ },
+ "list | max(v)": {
+  "repr": "3",
+  "type": "int"
+ },
+ "list | max_by(v, &@)": {
+  "repr": "3",
+  "type": "int"
+ },
+ "list | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: [3, 1, 2], expected one of: ['object'], received: \"array\""
+ },
+ "list | min(v)": {
+  "repr": "1",
+  "type": "int"
+ },
+ "list | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: None, expected one of: ['number', 'string'], received: \"null\""
+ },
+ "list | not_null(v)": {
+  "repr": "[3, 1, 2]",
+  "type": "list"
+ },
+ "list | reverse(v)": {
+  "repr": "[2, 1, 3]",
+  "type": "list"
+ },
+ "list | sort(v)": {
+  "repr": "[1, 2, 3]",
+  "type": "list"
+ },
+ "list | sort_by(v, &@)": {
+  "repr": "[1, 2, 3]",
+  "type": "list"
+ },
+ "list | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: [3, 1, 2], expected one of: ['string'], received: \"array\""
+ },
+ "list | sum(v)": {
+  "repr": "6",
+  "type": "int"
+ },
+ "list | to_array(v)": {
+  "repr": "[3, 1, 2]",
+  "type": "list"
+ },
+ "list | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "list | to_string(v)": {
+  "repr": "'[3,1,2]'",
+  "type": "str"
+ },
+ "list | type(v)": {
+  "repr": "'array'",
+  "type": "str"
+ },
+ "list | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "list | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "list | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "list | v || `\"fallback\"`": {
+  "repr": "[3, 1, 2]",
+  "type": "list"
+ },
+ "list | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "list | v[*]": {
+  "repr": "[3, 1, 2]",
+  "type": "list"
+ },
+ "list | v[0]": {
+  "repr": "3",
+  "type": "int"
+ },
+ "list | v[?@ > `1`]": {
+  "repr": "[3, 2]",
+  "type": "list"
+ },
+ "list | v[]": {
+  "repr": "[3, 1, 2]",
+  "type": "list"
+ },
+ "list | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: [3, 1, 2], expected one of: ['object'], received: \"array\""
+ },
+ "mixed | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "mixed | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: [1, 'a'], expected one of: ['number'], received: \"array\""
+ },
+ "mixed | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: a, expected one of: ['array-number'], received: \"str\""
+ },
+ "mixed | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: [1, 'a'], expected one of: ['number'], received: \"array\""
+ },
+ "mixed | contains(v, 'a')": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "mixed | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: 1, expected one of: ['array-string'], received: \"int\""
+ },
+ "mixed | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: [1, 'a'], expected one of: ['object'], received: \"array\""
+ },
+ "mixed | length(v)": {
+  "repr": "2",
+  "type": "int"
+ },
+ "mixed | map(&type(@), v)": {
+  "repr": "['number', 'string']",
+  "type": "list"
+ },
+ "mixed | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: a, expected one of: ['array-number', 'array-string'], received: \"str\""
+ },
+ "mixed | max_by(v, &@)": {
+  "error": "TypeError",
+  "message": "'>' not supported between instances of 'str' and 'int'"
+ },
+ "mixed | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: [1, 'a'], expected one of: ['object'], received: \"array\""
+ },
+ "mixed | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: a, expected one of: ['array-number', 'array-string'], received: \"str\""
+ },
+ "mixed | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: None, expected one of: ['number', 'string'], received: \"null\""
+ },
+ "mixed | not_null(v)": {
+  "repr": "[1, 'a']",
+  "type": "list"
+ },
+ "mixed | reverse(v)": {
+  "repr": "['a', 1]",
+  "type": "list"
+ },
+ "mixed | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: a, expected one of: ['array-string', 'array-number'], received: \"str\""
+ },
+ "mixed | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: a, expected one of: ['number'], received: \"string\""
+ },
+ "mixed | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: [1, 'a'], expected one of: ['string'], received: \"array\""
+ },
+ "mixed | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: a, expected one of: ['array-number'], received: \"str\""
+ },
+ "mixed | to_array(v)": {
+  "repr": "[1, 'a']",
+  "type": "list"
+ },
+ "mixed | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "mixed | to_string(v)": {
+  "repr": "'[1,\"a\"]'",
+  "type": "str"
+ },
+ "mixed | type(v)": {
+  "repr": "'array'",
+  "type": "str"
+ },
+ "mixed | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "mixed | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "mixed | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "mixed | v || `\"fallback\"`": {
+  "repr": "[1, 'a']",
+  "type": "list"
+ },
+ "mixed | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "mixed | v[*]": {
+  "repr": "[1, 'a']",
+  "type": "list"
+ },
+ "mixed | v[0]": {
+  "repr": "1",
+  "type": "int"
+ },
+ "mixed | v[?@ > `1`]": {
+  "error": "TypeError",
+  "message": "'>' not supported between instances of 'str' and 'int'"
+ },
+ "mixed | v[]": {
+  "repr": "[1, 'a']",
+  "type": "list"
+ },
+ "mixed | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: [1, 'a'], expected one of: ['object'], received: \"array\""
+ },
+ "my_dict | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "my_dict | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: {'a': 1}, expected one of: ['number'], received: \"unknown\""
+ },
+ "my_dict | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: {'a': 1}, expected one of: ['array-number'], received: \"unknown\""
+ },
+ "my_dict | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: {'a': 1}, expected one of: ['number'], received: \"unknown\""
+ },
+ "my_dict | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: {'a': 1}, expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "my_dict | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: {'a': 1}, expected one of: ['array-string'], received: \"unknown\""
+ },
+ "my_dict | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: {'a': 1}, expected one of: ['object'], received: \"unknown\""
+ },
+ "my_dict | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: {'a': 1}, expected one of: ['string', 'array', 'object'], received: \"unknown\""
+ },
+ "my_dict | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: {'a': 1}, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_dict | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: {'a': 1}, expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "my_dict | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: {'a': 1}, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_dict | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: {'a': 1}, expected one of: ['object'], received: \"unknown\""
+ },
+ "my_dict | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: {'a': 1}, expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "my_dict | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: {'a': 1}, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_dict | not_null(v)": {
+  "repr": "{'a': 1}",
+  "type": "MyDict"
+ },
+ "my_dict | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: {'a': 1}, expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "my_dict | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: {'a': 1}, expected one of: ['array-string', 'array-number'], received: \"unknown\""
+ },
+ "my_dict | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: {'a': 1}, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_dict | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: {'a': 1}, expected one of: ['string'], received: \"unknown\""
+ },
+ "my_dict | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: {'a': 1}, expected one of: ['array-number'], received: \"unknown\""
+ },
+ "my_dict | to_array(v)": {
+  "repr": "[{'a': 1}]",
+  "type": "list"
+ },
+ "my_dict | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_dict | to_string(v)": {
+  "repr": "'{\"a\":1}'",
+  "type": "str"
+ },
+ "my_dict | type(v)": {
+  "repr": "'object'",
+  "type": "str"
+ },
+ "my_dict | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_dict | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "my_dict | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_dict | v || `\"fallback\"`": {
+  "repr": "{'a': 1}",
+  "type": "MyDict"
+ },
+ "my_dict | v.a": {
+  "repr": "1",
+  "type": "int"
+ },
+ "my_dict | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_dict | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_dict | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_dict | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_dict | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: {'a': 1}, expected one of: ['object'], received: \"unknown\""
+ },
+ "my_int | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "my_int | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: 5, expected one of: ['number'], received: \"unknown\""
+ },
+ "my_int | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: 5, expected one of: ['array-number'], received: \"unknown\""
+ },
+ "my_int | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: 5, expected one of: ['number'], received: \"unknown\""
+ },
+ "my_int | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: 5, expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "my_int | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: 5, expected one of: ['array-string'], received: \"unknown\""
+ },
+ "my_int | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: 5, expected one of: ['object'], received: \"unknown\""
+ },
+ "my_int | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: 5, expected one of: ['string', 'array', 'object'], received: \"unknown\""
+ },
+ "my_int | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: 5, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_int | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: 5, expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "my_int | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: 5, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_int | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: 5, expected one of: ['object'], received: \"unknown\""
+ },
+ "my_int | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: 5, expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "my_int | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: 5, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_int | not_null(v)": {
+  "repr": "5",
+  "type": "MyInt"
+ },
+ "my_int | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: 5, expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "my_int | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: 5, expected one of: ['array-string', 'array-number'], received: \"unknown\""
+ },
+ "my_int | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: 5, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_int | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: 5, expected one of: ['string'], received: \"unknown\""
+ },
+ "my_int | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: 5, expected one of: ['array-number'], received: \"unknown\""
+ },
+ "my_int | to_array(v)": {
+  "repr": "[5]",
+  "type": "list"
+ },
+ "my_int | to_number(v)": {
+  "repr": "5",
+  "type": "MyInt"
+ },
+ "my_int | to_string(v)": {
+  "repr": "'5'",
+  "type": "str"
+ },
+ "my_int | type(v)": {
+  "repr": "'number'",
+  "type": "str"
+ },
+ "my_int | v <= `\"b\"`": {
+  "error": "TypeError",
+  "message": "'<=' not supported between instances of 'MyInt' and 'str'"
+ },
+ "my_int | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "my_int | v > `1`": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "my_int | v || `\"fallback\"`": {
+  "repr": "5",
+  "type": "MyInt"
+ },
+ "my_int | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_int | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_int | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_int | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_int | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_int | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: 5, expected one of: ['object'], received: \"unknown\""
+ },
+ "my_list | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "my_list | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: [3, 1, 2], expected one of: ['number'], received: \"unknown\""
+ },
+ "my_list | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: [3, 1, 2], expected one of: ['array-number'], received: \"unknown\""
+ },
+ "my_list | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: [3, 1, 2], expected one of: ['number'], received: \"unknown\""
+ },
+ "my_list | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: [3, 1, 2], expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "my_list | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: [3, 1, 2], expected one of: ['array-string'], received: \"unknown\""
+ },
+ "my_list | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: [3, 1, 2], expected one of: ['object'], received: \"unknown\""
+ },
+ "my_list | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: [3, 1, 2], expected one of: ['string', 'array', 'object'], received: \"unknown\""
+ },
+ "my_list | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: [3, 1, 2], expected one of: ['array'], received: \"unknown\""
+ },
+ "my_list | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: [3, 1, 2], expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "my_list | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: [3, 1, 2], expected one of: ['array'], received: \"unknown\""
+ },
+ "my_list | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: [3, 1, 2], expected one of: ['object'], received: \"unknown\""
+ },
+ "my_list | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: [3, 1, 2], expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "my_list | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: [3, 1, 2], expected one of: ['array'], received: \"unknown\""
+ },
+ "my_list | not_null(v)": {
+  "repr": "[3, 1, 2]",
+  "type": "MyList"
+ },
+ "my_list | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: [3, 1, 2], expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "my_list | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: [3, 1, 2], expected one of: ['array-string', 'array-number'], received: \"unknown\""
+ },
+ "my_list | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: [3, 1, 2], expected one of: ['array'], received: \"unknown\""
+ },
+ "my_list | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: [3, 1, 2], expected one of: ['string'], received: \"unknown\""
+ },
+ "my_list | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: [3, 1, 2], expected one of: ['array-number'], received: \"unknown\""
+ },
+ "my_list | to_array(v)": {
+  "repr": "[3, 1, 2]",
+  "type": "MyList"
+ },
+ "my_list | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_list | to_string(v)": {
+  "repr": "'[3,1,2]'",
+  "type": "str"
+ },
+ "my_list | type(v)": {
+  "repr": "'array'",
+  "type": "str"
+ },
+ "my_list | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_list | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "my_list | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_list | v || `\"fallback\"`": {
+  "repr": "[3, 1, 2]",
+  "type": "MyList"
+ },
+ "my_list | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_list | v[*]": {
+  "repr": "[3, 1, 2]",
+  "type": "list"
+ },
+ "my_list | v[0]": {
+  "repr": "3",
+  "type": "int"
+ },
+ "my_list | v[?@ > `1`]": {
+  "repr": "[3, 2]",
+  "type": "list"
+ },
+ "my_list | v[]": {
+  "repr": "[3, 1, 2]",
+  "type": "list"
+ },
+ "my_list | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: [3, 1, 2], expected one of: ['object'], received: \"unknown\""
+ },
+ "my_str | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "my_str | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: abc, expected one of: ['number'], received: \"unknown\""
+ },
+ "my_str | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: abc, expected one of: ['array-number'], received: \"unknown\""
+ },
+ "my_str | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: abc, expected one of: ['number'], received: \"unknown\""
+ },
+ "my_str | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: abc, expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "my_str | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: abc, expected one of: ['array-string'], received: \"unknown\""
+ },
+ "my_str | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: abc, expected one of: ['object'], received: \"unknown\""
+ },
+ "my_str | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: abc, expected one of: ['string', 'array', 'object'], received: \"unknown\""
+ },
+ "my_str | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: abc, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_str | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: abc, expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "my_str | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: abc, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_str | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: abc, expected one of: ['object'], received: \"unknown\""
+ },
+ "my_str | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: abc, expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "my_str | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: abc, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_str | not_null(v)": {
+  "repr": "'abc'",
+  "type": "MyStr"
+ },
+ "my_str | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: abc, expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "my_str | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: abc, expected one of: ['array-string', 'array-number'], received: \"unknown\""
+ },
+ "my_str | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: abc, expected one of: ['array'], received: \"unknown\""
+ },
+ "my_str | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: abc, expected one of: ['string'], received: \"unknown\""
+ },
+ "my_str | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: abc, expected one of: ['array-number'], received: \"unknown\""
+ },
+ "my_str | to_array(v)": {
+  "repr": "['abc']",
+  "type": "list"
+ },
+ "my_str | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_str | to_string(v)": {
+  "repr": "'abc'",
+  "type": "MyStr"
+ },
+ "my_str | type(v)": {
+  "repr": "'string'",
+  "type": "str"
+ },
+ "my_str | v <= `\"b\"`": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "my_str | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "my_str | v > `1`": {
+  "error": "TypeError",
+  "message": "'>' not supported between instances of 'MyStr' and 'int'"
+ },
+ "my_str | v || `\"fallback\"`": {
+  "repr": "'abc'",
+  "type": "MyStr"
+ },
+ "my_str | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_str | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_str | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_str | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_str | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_str | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: abc, expected one of: ['object'], received: \"unknown\""
+ },
+ "my_strs | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "my_strs | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: ['b', 'a'], expected one of: ['number'], received: \"array\""
+ },
+ "my_strs | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: b, expected one of: ['array-number'], received: \"MyStr\""
+ },
+ "my_strs | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: ['b', 'a'], expected one of: ['number'], received: \"array\""
+ },
+ "my_strs | contains(v, 'a')": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "my_strs | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: b, expected one of: ['array-string'], received: \"MyStr\""
+ },
+ "my_strs | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: ['b', 'a'], expected one of: ['object'], received: \"array\""
+ },
+ "my_strs | length(v)": {
+  "repr": "2",
+  "type": "int"
+ },
+ "my_strs | map(&type(@), v)": {
+  "repr": "['string', 'string']",
+  "type": "list"
+ },
+ "my_strs | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: b, expected one of: ['array-number', 'array-string'], received: \"MyStr\""
+ },
+ "my_strs | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: b, expected one of: ['number', 'string'], received: \"unknown\""
+ },
+ "my_strs | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: ['b', 'a'], expected one of: ['object'], received: \"array\""
+ },
+ "my_strs | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: b, expected one of: ['array-number', 'array-string'], received: \"MyStr\""
+ },
+ "my_strs | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: None, expected one of: ['number', 'string'], received: \"null\""
+ },
+ "my_strs | not_null(v)": {
+  "repr": "['b', 'a']",
+  "type": "list"
+ },
+ "my_strs | reverse(v)": {
+  "repr": "['a', 'b']",
+  "type": "list"
+ },
+ "my_strs | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: b, expected one of: ['array-string', 'array-number'], received: \"MyStr\""
+ },
+ "my_strs | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: b, expected one of: ['string', 'number'], received: \"unknown\""
+ },
+ "my_strs | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: ['b', 'a'], expected one of: ['string'], received: \"array\""
+ },
+ "my_strs | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: b, expected one of: ['array-number'], received: \"MyStr\""
+ },
+ "my_strs | to_array(v)": {
+  "repr": "['b', 'a']",
+  "type": "list"
+ },
+ "my_strs | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_strs | to_string(v)": {
+  "repr": "'[\"b\",\"a\"]'",
+  "type": "str"
+ },
+ "my_strs | type(v)": {
+  "repr": "'array'",
+  "type": "str"
+ },
+ "my_strs | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_strs | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "my_strs | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_strs | v || `\"fallback\"`": {
+  "repr": "['b', 'a']",
+  "type": "list"
+ },
+ "my_strs | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "my_strs | v[*]": {
+  "repr": "['b', 'a']",
+  "type": "list"
+ },
+ "my_strs | v[0]": {
+  "repr": "'b'",
+  "type": "MyStr"
+ },
+ "my_strs | v[?@ > `1`]": {
+  "error": "TypeError",
+  "message": "'>' not supported between instances of 'MyStr' and 'int'"
+ },
+ "my_strs | v[]": {
+  "repr": "['b', 'a']",
+  "type": "list"
+ },
+ "my_strs | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: ['b', 'a'], expected one of: ['object'], received: \"array\""
+ },
+ "none | !v": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "none | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: None, expected one of: ['number'], received: \"null\""
+ },
+ "none | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: None, expected one of: ['array-number'], received: \"null\""
+ },
+ "none | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: None, expected one of: ['number'], received: \"null\""
+ },
+ "none | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: None, expected one of: ['array', 'string'], received: \"null\""
+ },
+ "none | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: None, expected one of: ['array-string'], received: \"null\""
+ },
+ "none | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: None, expected one of: ['object'], received: \"null\""
+ },
+ "none | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: None, expected one of: ['string', 'array', 'object'], received: \"null\""
+ },
+ "none | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: None, expected one of: ['array'], received: \"null\""
+ },
+ "none | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: None, expected one of: ['array-number', 'array-string'], received: \"null\""
+ },
+ "none | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: None, expected one of: ['array'], received: \"null\""
+ },
+ "none | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: None, expected one of: ['object'], received: \"null\""
+ },
+ "none | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: None, expected one of: ['array-number', 'array-string'], received: \"null\""
+ },
+ "none | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: None, expected one of: ['array'], received: \"null\""
+ },
+ "none | not_null(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "none | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: None, expected one of: ['array', 'string'], received: \"null\""
+ },
+ "none | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: None, expected one of: ['array-string', 'array-number'], received: \"null\""
+ },
+ "none | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: None, expected one of: ['array'], received: \"null\""
+ },
+ "none | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: None, expected one of: ['string'], received: \"null\""
+ },
+ "none | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: None, expected one of: ['array-number'], received: \"null\""
+ },
+ "none | to_array(v)": {
+  "repr": "[None]",
+  "type": "list"
+ },
+ "none | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "none | to_string(v)": {
+  "repr": "'null'",
+  "type": "str"
+ },
+ "none | type(v)": {
+  "repr": "'null'",
+  "type": "str"
+ },
+ "none | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "none | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "none | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "none | v || `\"fallback\"`": {
+  "repr": "'fallback'",
+  "type": "str"
+ },
+ "none | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "none | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "none | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "none | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "none | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "none | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: None, expected one of: ['object'], received: \"null\""
+ },
+ "ordered_dict | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "ordered_dict | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['number'], received: \"object\""
+ },
+ "ordered_dict | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array-number'], received: \"object\""
+ },
+ "ordered_dict | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['number'], received: \"object\""
+ },
+ "ordered_dict | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array', 'string'], received: \"object\""
+ },
+ "ordered_dict | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array-string'], received: \"object\""
+ },
+ "ordered_dict | keys(v)": {
+  "repr": "['a']",
+  "type": "list"
+ },
+ "ordered_dict | length(v)": {
+  "repr": "1",
+  "type": "int"
+ },
+ "ordered_dict | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array'], received: \"object\""
+ },
+ "ordered_dict | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array-number', 'array-string'], received: \"object\""
+ },
+ "ordered_dict | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array'], received: \"object\""
+ },
+ "ordered_dict | merge(v, `{}`)": {
+  "repr": "{'a': 1}",
+  "type": "dict"
+ },
+ "ordered_dict | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array-number', 'array-string'], received: \"object\""
+ },
+ "ordered_dict | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array'], received: \"object\""
+ },
+ "ordered_dict | not_null(v)": {
+  "repr": "OrderedDict({'a': 1})",
+  "type": "OrderedDict"
+ },
+ "ordered_dict | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array', 'string'], received: \"object\""
+ },
+ "ordered_dict | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array-string', 'array-number'], received: \"object\""
+ },
+ "ordered_dict | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array'], received: \"object\""
+ },
+ "ordered_dict | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['string'], received: \"object\""
+ },
+ "ordered_dict | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: OrderedDict({'a': 1}), expected one of: ['array-number'], received: \"object\""
+ },
+ "ordered_dict | to_array(v)": {
+  "repr": "[OrderedDict({'a': 1})]",
+  "type": "list"
+ },
+ "ordered_dict | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "ordered_dict | to_string(v)": {
+  "repr": "'{\"a\":1}'",
+  "type": "str"
+ },
+ "ordered_dict | type(v)": {
+  "repr": "'object'",
+  "type": "str"
+ },
+ "ordered_dict | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "ordered_dict | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "ordered_dict | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "ordered_dict | v || `\"fallback\"`": {
+  "repr": "OrderedDict({'a': 1})",
+  "type": "OrderedDict"
+ },
+ "ordered_dict | v.a": {
+  "repr": "1",
+  "type": "int"
+ },
+ "ordered_dict | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "ordered_dict | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "ordered_dict | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "ordered_dict | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "ordered_dict | values(v)": {
+  "repr": "[1]",
+  "type": "list"
+ },
+ "str | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "str | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: abc, expected one of: ['number'], received: \"string\""
+ },
+ "str | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: abc, expected one of: ['array-number'], received: \"string\""
+ },
+ "str | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: abc, expected one of: ['number'], received: \"string\""
+ },
+ "str | contains(v, 'a')": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "str | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: abc, expected one of: ['array-string'], received: \"string\""
+ },
+ "str | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: abc, expected one of: ['object'], received: \"string\""
+ },
+ "str | length(v)": {
+  "repr": "3",
+  "type": "int"
+ },
+ "str | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: abc, expected one of: ['array'], received: \"string\""
+ },
+ "str | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: abc, expected one of: ['array-number', 'array-string'], received: \"string\""
+ },
+ "str | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: abc, expected one of: ['array'], received: \"string\""
+ },
+ "str | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: abc, expected one of: ['object'], received: \"string\""
+ },
+ "str | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: abc, expected one of: ['array-number', 'array-string'], received: \"string\""
+ },
+ "str | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: abc, expected one of: ['array'], received: \"string\""
+ },
+ "str | not_null(v)": {
+  "repr": "'abc'",
+  "type": "str"
+ },
+ "str | reverse(v)": {
+  "repr": "'cba'",
+  "type": "str"
+ },
+ "str | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: abc, expected one of: ['array-string', 'array-number'], received: \"string\""
+ },
+ "str | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: abc, expected one of: ['array'], received: \"string\""
+ },
+ "str | starts_with(v, 'a')": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "str | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: abc, expected one of: ['array-number'], received: \"string\""
+ },
+ "str | to_array(v)": {
+  "repr": "['abc']",
+  "type": "list"
+ },
+ "str | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "str | to_string(v)": {
+  "repr": "'abc'",
+  "type": "str"
+ },
+ "str | type(v)": {
+  "repr": "'string'",
+  "type": "str"
+ },
+ "str | v <= `\"b\"`": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "str | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "str | v > `1`": {
+  "error": "TypeError",
+  "message": "'>' not supported between instances of 'str' and 'int'"
+ },
+ "str | v || `\"fallback\"`": {
+  "repr": "'abc'",
+  "type": "str"
+ },
+ "str | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "str | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "str | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "str | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "str | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "str | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: abc, expected one of: ['object'], received: \"string\""
+ },
+ "strs | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "strs | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: ['b', 'a'], expected one of: ['number'], received: \"array\""
+ },
+ "strs | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: b, expected one of: ['array-number'], received: \"str\""
+ },
+ "strs | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: ['b', 'a'], expected one of: ['number'], received: \"array\""
+ },
+ "strs | contains(v, 'a')": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "strs | join(',', v)": {
+  "repr": "'b,a'",
+  "type": "str"
+ },
+ "strs | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: ['b', 'a'], expected one of: ['object'], received: \"array\""
+ },
+ "strs | length(v)": {
+  "repr": "2",
+  "type": "int"
+ },
+ "strs | map(&type(@), v)": {
+  "repr": "['string', 'string']",
+  "type": "list"
+ },
+ "strs | max(v)": {
+  "repr": "'b'",
+  "type": "str"
+ },
+ "strs | max_by(v, &@)": {
+  "repr": "'b'",
+  "type": "str"
+ },
+ "strs | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: ['b', 'a'], expected one of: ['object'], received: \"array\""
+ },
+ "strs | min(v)": {
+  "repr": "'a'",
+  "type": "str"
+ },
+ "strs | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: None, expected one of: ['number', 'string'], received: \"null\""
+ },
+ "strs | not_null(v)": {
+  "repr": "['b', 'a']",
+  "type": "list"
+ },
+ "strs | reverse(v)": {
+  "repr": "['a', 'b']",
+  "type": "list"
+ },
+ "strs | sort(v)": {
+  "repr": "['a', 'b']",
+  "type": "list"
+ },
+ "strs | sort_by(v, &@)": {
+  "repr": "['a', 'b']",
+  "type": "list"
+ },
+ "strs | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: ['b', 'a'], expected one of: ['string'], received: \"array\""
+ },
+ "strs | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: b, expected one of: ['array-number'], received: \"str\""
+ },
+ "strs | to_array(v)": {
+  "repr": "['b', 'a']",
+  "type": "list"
+ },
+ "strs | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "strs | to_string(v)": {
+  "repr": "'[\"b\",\"a\"]'",
+  "type": "str"
+ },
+ "strs | type(v)": {
+  "repr": "'array'",
+  "type": "str"
+ },
+ "strs | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "strs | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "strs | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "strs | v || `\"fallback\"`": {
+  "repr": "['b', 'a']",
+  "type": "list"
+ },
+ "strs | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "strs | v[*]": {
+  "repr": "['b', 'a']",
+  "type": "list"
+ },
+ "strs | v[0]": {
+  "repr": "'b'",
+  "type": "str"
+ },
+ "strs | v[?@ > `1`]": {
+  "error": "TypeError",
+  "message": "'>' not supported between instances of 'str' and 'int'"
+ },
+ "strs | v[]": {
+  "repr": "['b', 'a']",
+  "type": "list"
+ },
+ "strs | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: ['b', 'a'], expected one of: ['object'], received: \"array\""
+ },
+ "true | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "true | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: True, expected one of: ['number'], received: \"boolean\""
+ },
+ "true | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: True, expected one of: ['array-number'], received: \"boolean\""
+ },
+ "true | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: True, expected one of: ['number'], received: \"boolean\""
+ },
+ "true | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: True, expected one of: ['array', 'string'], received: \"boolean\""
+ },
+ "true | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: True, expected one of: ['array-string'], received: \"boolean\""
+ },
+ "true | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: True, expected one of: ['object'], received: \"boolean\""
+ },
+ "true | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: True, expected one of: ['string', 'array', 'object'], received: \"boolean\""
+ },
+ "true | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: True, expected one of: ['array'], received: \"boolean\""
+ },
+ "true | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: True, expected one of: ['array-number', 'array-string'], received: \"boolean\""
+ },
+ "true | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: True, expected one of: ['array'], received: \"boolean\""
+ },
+ "true | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: True, expected one of: ['object'], received: \"boolean\""
+ },
+ "true | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: True, expected one of: ['array-number', 'array-string'], received: \"boolean\""
+ },
+ "true | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: True, expected one of: ['array'], received: \"boolean\""
+ },
+ "true | not_null(v)": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "true | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: True, expected one of: ['array', 'string'], received: \"boolean\""
+ },
+ "true | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: True, expected one of: ['array-string', 'array-number'], received: \"boolean\""
+ },
+ "true | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: True, expected one of: ['array'], received: \"boolean\""
+ },
+ "true | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: True, expected one of: ['string'], received: \"boolean\""
+ },
+ "true | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: True, expected one of: ['array-number'], received: \"boolean\""
+ },
+ "true | to_array(v)": {
+  "repr": "[True]",
+  "type": "list"
+ },
+ "true | to_number(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "true | to_string(v)": {
+  "repr": "'true'",
+  "type": "str"
+ },
+ "true | type(v)": {
+  "repr": "'boolean'",
+  "type": "str"
+ },
+ "true | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "true | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "true | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "true | v || `\"fallback\"`": {
+  "repr": "True",
+  "type": "bool"
+ },
+ "true | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "true | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "true | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "true | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "true | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "true | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: True, expected one of: ['object'], received: \"boolean\""
+ },
+ "tuple | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "tuple | abs(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function abs(), invalid type for value: (3, 1, 2), expected one of: ['number'], received: \"unknown\""
+ },
+ "tuple | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: (3, 1, 2), expected one of: ['array-number'], received: \"unknown\""
+ },
+ "tuple | ceil(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function ceil(), invalid type for value: (3, 1, 2), expected one of: ['number'], received: \"unknown\""
+ },
+ "tuple | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: (3, 1, 2), expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "tuple | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: (3, 1, 2), expected one of: ['array-string'], received: \"unknown\""
+ },
+ "tuple | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: (3, 1, 2), expected one of: ['object'], received: \"unknown\""
+ },
+ "tuple | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: (3, 1, 2), expected one of: ['string', 'array', 'object'], received: \"unknown\""
+ },
+ "tuple | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: (3, 1, 2), expected one of: ['array'], received: \"unknown\""
+ },
+ "tuple | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: (3, 1, 2), expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "tuple | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: (3, 1, 2), expected one of: ['array'], received: \"unknown\""
+ },
+ "tuple | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: (3, 1, 2), expected one of: ['object'], received: \"unknown\""
+ },
+ "tuple | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: (3, 1, 2), expected one of: ['array-number', 'array-string'], received: \"unknown\""
+ },
+ "tuple | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: (3, 1, 2), expected one of: ['array'], received: \"unknown\""
+ },
+ "tuple | not_null(v)": {
+  "repr": "(3, 1, 2)",
+  "type": "tuple"
+ },
+ "tuple | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: (3, 1, 2), expected one of: ['array', 'string'], received: \"unknown\""
+ },
+ "tuple | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: (3, 1, 2), expected one of: ['array-string', 'array-number'], received: \"unknown\""
+ },
+ "tuple | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: (3, 1, 2), expected one of: ['array'], received: \"unknown\""
+ },
+ "tuple | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: (3, 1, 2), expected one of: ['string'], received: \"unknown\""
+ },
+ "tuple | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: (3, 1, 2), expected one of: ['array-number'], received: \"unknown\""
+ },
+ "tuple | to_array(v)": {
+  "repr": "[(3, 1, 2)]",
+  "type": "list"
+ },
+ "tuple | to_number(v)": {
+  "error": "TypeError",
+  "message": "int() argument must be a string, a bytes-like object or a real number, not 'tuple'"
+ },
+ "tuple | to_string(v)": {
+  "repr": "'[3,1,2]'",
+  "type": "str"
+ },
+ "tuple | type(v)": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "tuple | v <= `\"b\"`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "tuple | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "tuple | v > `1`": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "tuple | v || `\"fallback\"`": {
+  "repr": "(3, 1, 2)",
+  "type": "tuple"
+ },
+ "tuple | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "tuple | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "tuple | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "tuple | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "tuple | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "tuple | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: (3, 1, 2), expected one of: ['object'], received: \"unknown\""
+ },
+ "zero | !v": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "zero | abs(v)": {
+  "repr": "0",
+  "type": "int"
+ },
+ "zero | avg(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function avg(), invalid type for value: 0, expected one of: ['array-number'], received: \"number\""
+ },
+ "zero | ceil(v)": {
+  "repr": "0",
+  "type": "int"
+ },
+ "zero | contains(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function contains(), invalid type for value: 0, expected one of: ['array', 'string'], received: \"number\""
+ },
+ "zero | join(',', v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function join(), invalid type for value: 0, expected one of: ['array-string'], received: \"number\""
+ },
+ "zero | keys(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function keys(), invalid type for value: 0, expected one of: ['object'], received: \"number\""
+ },
+ "zero | length(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function length(), invalid type for value: 0, expected one of: ['string', 'array', 'object'], received: \"number\""
+ },
+ "zero | map(&type(@), v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function map(), invalid type for value: 0, expected one of: ['array'], received: \"number\""
+ },
+ "zero | max(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max(), invalid type for value: 0, expected one of: ['array-number', 'array-string'], received: \"number\""
+ },
+ "zero | max_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function max_by(), invalid type for value: 0, expected one of: ['array'], received: \"number\""
+ },
+ "zero | merge(v, `{}`)": {
+  "error": "JMESPathTypeError",
+  "message": "In function merge(), invalid type for value: 0, expected one of: ['object'], received: \"number\""
+ },
+ "zero | min(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min(), invalid type for value: 0, expected one of: ['array-number', 'array-string'], received: \"number\""
+ },
+ "zero | min_by(v, &k)": {
+  "error": "JMESPathTypeError",
+  "message": "In function min_by(), invalid type for value: 0, expected one of: ['array'], received: \"number\""
+ },
+ "zero | not_null(v)": {
+  "repr": "0",
+  "type": "int"
+ },
+ "zero | reverse(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function reverse(), invalid type for value: 0, expected one of: ['array', 'string'], received: \"number\""
+ },
+ "zero | sort(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort(), invalid type for value: 0, expected one of: ['array-string', 'array-number'], received: \"number\""
+ },
+ "zero | sort_by(v, &@)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sort_by(), invalid type for value: 0, expected one of: ['array'], received: \"number\""
+ },
+ "zero | starts_with(v, 'a')": {
+  "error": "JMESPathTypeError",
+  "message": "In function starts_with(), invalid type for value: 0, expected one of: ['string'], received: \"number\""
+ },
+ "zero | sum(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function sum(), invalid type for value: 0, expected one of: ['array-number'], received: \"number\""
+ },
+ "zero | to_array(v)": {
+  "repr": "[0]",
+  "type": "list"
+ },
+ "zero | to_number(v)": {
+  "repr": "0",
+  "type": "int"
+ },
+ "zero | to_string(v)": {
+  "repr": "'0'",
+  "type": "str"
+ },
+ "zero | type(v)": {
+  "repr": "'number'",
+  "type": "str"
+ },
+ "zero | v <= `\"b\"`": {
+  "error": "TypeError",
+  "message": "'<=' not supported between instances of 'int' and 'str'"
+ },
+ "zero | v == `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "zero | v > `1`": {
+  "repr": "False",
+  "type": "bool"
+ },
+ "zero | v || `\"fallback\"`": {
+  "repr": "0",
+  "type": "int"
+ },
+ "zero | v.a": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "zero | v[*]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "zero | v[0]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "zero | v[?@ > `1`]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "zero | v[]": {
+  "repr": "None",
+  "type": "NoneType"
+ },
+ "zero | values(v)": {
+  "error": "JMESPathTypeError",
+  "message": "In function values(), invalid type for value: 0, expected one of: ['object'], received: \"number\""
+ }
+}

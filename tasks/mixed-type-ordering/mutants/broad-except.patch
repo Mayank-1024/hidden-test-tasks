@@ -1,0 +1,56 @@
+diff --git a/jmespath/functions.py b/jmespath/functions.py
+index 627b569..43c3916 100644
+--- a/jmespath/functions.py
++++ b/jmespath/functions.py
+@@ -332,7 +332,11 @@ class Functions(metaclass=FunctionRegistry):
+                                         ['number', 'string'],
+                                         'min_by')
+         if array:
+-            return min(array, key=keyfunc)
++            try:
++                return min(array, key=keyfunc)
++            except TypeError as e:
++                raise exceptions.JMESPathTypeError(
++                    'min_by', array, 'mixed', ['number', 'string'])
+         else:
+             return None
+ 
+@@ -342,7 +346,11 @@ class Functions(metaclass=FunctionRegistry):
+                                         ['number', 'string'],
+                                         'max_by')
+         if array:
+-            return max(array, key=keyfunc)
++            try:
++                return max(array, key=keyfunc)
++            except TypeError as e:
++                raise exceptions.JMESPathTypeError(
++                    'max_by', array, 'mixed', ['number', 'string'])
+         else:
+             return None
+ 
+diff --git a/jmespath/visitor.py b/jmespath/visitor.py
+index 15fb177..26aeb6a 100644
+--- a/jmespath/visitor.py
++++ b/jmespath/visitor.py
+@@ -149,13 +149,15 @@ class TreeInterpreter(Visitor):
+             # Ordering operators are only valid for numbers.
+             # Evaluating any other type with a comparison operator
+             # will yield a None value.
+-            left = self.visit(node['children'][0], value)
+-            right = self.visit(node['children'][1], value)
+-            num_types = (int, float)
+-            if not (_is_comparable(left) and
+-                    _is_comparable(right)):
++            try:
++                left = self.visit(node['children'][0], value)
++                right = self.visit(node['children'][1], value)
++                if not (_is_comparable(left) and
++                        _is_comparable(right)):
++                    return None
++                return comparator_func(left, right)
++            except TypeError:
+                 return None
+-            return comparator_func(left, right)
+ 
+     def visit_current(self, node, value):
+         return value

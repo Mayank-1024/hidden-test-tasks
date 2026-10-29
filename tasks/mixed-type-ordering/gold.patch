@@ -1,0 +1,74 @@
+diff --git a/CHANGELOG.rst b/CHANGELOG.rst
+index dc673df..70b99fb 100644
+--- a/CHANGELOG.rst
++++ b/CHANGELOG.rst
+@@ -1,7 +1,8 @@
+ Next Release (TBD)
+ ==================
+ 
+-* No changes yet.
++* Fix ``TypeError`` when an ordering comparison, ``min_by()`` or
++  ``max_by()`` compares a string with a number.
+ 
+ 
+ 1.1.0
+diff --git a/jmespath/functions.py b/jmespath/functions.py
+index 627b569..031944d 100644
+--- a/jmespath/functions.py
++++ b/jmespath/functions.py
+@@ -347,6 +347,11 @@ class Functions(metaclass=FunctionRegistry):
+             return None
+ 
+     def _create_key_func(self, expref, allowed_types, function_name):
++        # The first key fixes the type every later key must have.
++        # min_by/max_by allow numbers or strings, but not a mix of
++        # the two: Python cannot order a str against an int.
++        seen_type = []
++
+         def keyfunc(x):
+             result = expref.visit(expref.expression, x)
+             actual_typename = type(result).__name__
+@@ -355,6 +360,11 @@ class Functions(metaclass=FunctionRegistry):
+             if jmespath_type not in allowed_types:
+                 raise exceptions.JMESPathTypeError(
+                     function_name, result, jmespath_type, allowed_types)
++            if not seen_type:
++                seen_type.append(jmespath_type)
++            elif jmespath_type != seen_type[0]:
++                raise exceptions.JMESPathTypeError(
++                    function_name, result, jmespath_type, seen_type)
+             return result
+         return keyfunc
+ 
+diff --git a/jmespath/visitor.py b/jmespath/visitor.py
+index 15fb177..04a87e2 100644
+--- a/jmespath/visitor.py
++++ b/jmespath/visitor.py
+@@ -43,6 +43,16 @@ def _is_comparable(x):
+     return _is_actual_number(x) or isinstance(x, string_type)
+ 
+ 
++def _is_orderable_pair(x, y):
++    # Ordering is only defined between two numbers or two strings.
++    # Checking each side on its own is not enough: a string and a
++    # number are each comparable, but Python cannot order them and
++    # raises TypeError.
++    if _is_actual_number(x) and _is_actual_number(y):
++        return True
++    return isinstance(x, string_type) and isinstance(y, string_type)
++
++
+ def _is_actual_number(x):
+     # We need to handle python's quirkiness with booleans,
+     # specifically:
+@@ -151,9 +161,7 @@ class TreeInterpreter(Visitor):
+             # will yield a None value.
+             left = self.visit(node['children'][0], value)
+             right = self.visit(node['children'][1], value)
+-            num_types = (int, float)
+-            if not (_is_comparable(left) and
+-                    _is_comparable(right)):
++            if not _is_orderable_pair(left, right):
+                 return None
+             return comparator_func(left, right)
+ 

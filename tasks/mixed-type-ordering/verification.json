@@ -1,0 +1,203 @@
+{
+  "task_id": "mixed-type-ordering",
+  "ok": true,
+  "runner": "docker",
+  "verified_at": "2026-10-29T10:19:55Z",
+  "checks": [
+    {
+      "name": "task.md exists",
+      "ok": true,
+      "detail": "task.md"
+    },
+    {
+      "name": "gold.patch exists",
+      "ok": true,
+      "detail": "gold.patch"
+    },
+    {
+      "name": "rubric.md exists",
+      "ok": true,
+      "detail": "rubric.md"
+    },
+    {
+      "name": "Dockerfile exists",
+      "ok": true,
+      "detail": "Dockerfile"
+    },
+    {
+      "name": "hidden test_fail_to_pass.py exists",
+      "ok": true,
+      "detail": "hidden_tests/test_fail_to_pass.py"
+    },
+    {
+      "name": "hidden test_pass_to_pass.py exists",
+      "ok": true,
+      "detail": "hidden_tests/test_pass_to_pass.py"
+    },
+    {
+      "name": "gold patch touches only source and doc files",
+      "ok": true,
+      "detail": "touches ['CHANGELOG.rst', 'jmespath/functions.py', 'jmespath/visitor.py']"
+    },
+    {
+      "name": "task.md does not quote the gold patch",
+      "ok": true,
+      "detail": "0 gold lines found in task.md"
+    },
+    {
+      "name": "task.md does not name hidden tests",
+      "ok": true,
+      "detail": "no hidden test names in task.md"
+    },
+    {
+      "name": "start: every fail-to-pass test fails",
+      "ok": true,
+      "detail": "24/24 fail"
+    },
+    {
+      "name": "start: every pass-to-pass test passes",
+      "ok": true,
+      "detail": "34/34 pass"
+    },
+    {
+      "name": "start: visible suite passes",
+      "ok": true,
+      "detail": "991/992 pass, 1 skipped"
+    },
+    {
+      "name": "gold patch applies cleanly",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gold: every hidden test passes",
+      "ok": true,
+      "detail": "24/24 fail-to-pass, 34/34 pass-to-pass"
+    },
+    {
+      "name": "gold: visible suite still passes",
+      "ok": true,
+      "detail": "991/992 pass"
+    },
+    {
+      "name": "same fail-to-pass tests collected on start and gold",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "gold outcomes identical over 2 runs",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "mutant broad-except is rejected",
+      "ok": true,
+      "detail": "4 hidden tests fail, e.g. ['test_custom_function_type_error_propagates[boom(a) < `1`]', 'test_custom_function_type_error_propagates[items[?boom(@) > `1`]]']"
+    },
+    {
+      "name": "mutant comparator-only is rejected",
+      "ok": true,
+      "detail": "9 hidden tests fail, e.g. ['test_by_functions_raise_jmespath_type_error[ages0-max_by]', 'test_by_functions_raise_jmespath_type_error[ages0-min_by]']"
+    }
+  ],
+  "start": {
+    "fail_to_pass": "0/24",
+    "pass_to_pass": "34/34",
+    "visible": "991/992"
+  },
+  "gold": {
+    "fail_to_pass": "24/24",
+    "pass_to_pass": "34/34",
+    "visible": "991/992"
+  },
+  "hidden_test_ids": [
+    "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages0-max_by]",
+    "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages0-min_by]",
+    "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages1-max_by]",
+    "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages1-min_by]",
+    "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages2-max_by]",
+    "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages2-min_by]",
+    "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages3-max_by]",
+    "hidden_tests.test_fail_to_pass::test_by_functions_raise_jmespath_type_error[ages3-min_by]",
+    "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?!(age > `30`)].name-expected5]",
+    "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?`30` < age].name-expected4]",
+    "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?age < `30`].name-expected2]",
+    "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?age <= `40`].name-expected3]",
+    "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?age > `30` || name == 'b'].name-expected6]",
+    "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?age > `30`].name-expected0]",
+    "hidden_tests.test_fail_to_pass::test_filter_skips_string_number_comparisons[people[?age >= `25`].name-expected1]",
+    "hidden_tests.test_fail_to_pass::test_multiselect_comparisons_are_null",
+    "hidden_tests.test_fail_to_pass::test_service_style_error_handling",
+    "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`\"a\"` < `1`]",
+    "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`\"a\"` <= `1`]",
+    "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`\"a\"` > `1`]",
+    "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`\"a\"` >= `1`]",
+    "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`1.5` >= `\"a\"`]",
+    "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[`1` < `\"a\"`]",
+    "hidden_tests.test_fail_to_pass::test_string_number_ordering_is_null[a < b]",
+    "hidden_tests.test_pass_to_pass::test_array_functions_still_reject_mixed[max(`[1, \"a\"]`)]",
+    "hidden_tests.test_pass_to_pass::test_array_functions_still_reject_mixed[sort(`[1, \"a\"]`)]",
+    "hidden_tests.test_pass_to_pass::test_array_functions_unchanged[max(`[1, 3, 2]`)-3]",
+    "hidden_tests.test_pass_to_pass::test_array_functions_unchanged[min(`[\"b\", \"a\"]`)-a]",
+    "hidden_tests.test_pass_to_pass::test_array_functions_unchanged[sort(`[\"b\", \"a\"]`)-expected2]",
+    "hidden_tests.test_pass_to_pass::test_by_functions_on_valid_data[max_by(`[]`, &age)-None]",
+    "hidden_tests.test_pass_to_pass::test_by_functions_on_valid_data[max_by(people, &age).name-a]",
+    "hidden_tests.test_pass_to_pass::test_by_functions_on_valid_data[max_by(people, &name).name-c]",
+    "hidden_tests.test_pass_to_pass::test_by_functions_on_valid_data[max_by(people[:1], &age).name-a]",
+    "hidden_tests.test_pass_to_pass::test_by_functions_on_valid_data[min_by(`[]`, &age)-None]",
+    "hidden_tests.test_pass_to_pass::test_by_functions_on_valid_data[min_by(people, &age).name-c]",
+    "hidden_tests.test_pass_to_pass::test_by_functions_on_valid_data[min_by(people, &name).name-a]",
+    "hidden_tests.test_pass_to_pass::test_by_functions_on_valid_data[sort_by(people, &age)[].name-expected4]",
+    "hidden_tests.test_pass_to_pass::test_by_functions_still_reject_non_orderable_keys[max_by(people, &age)]",
+    "hidden_tests.test_pass_to_pass::test_by_functions_still_reject_non_orderable_keys[min_by(people, &age)]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`\"1\"` != `1`-True]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`\"1\"` == `1`-False]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`\"a\"` < `\"b\"`-True]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`\"b\"` <= `\"a\"`-False]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`0` == `false`-False]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`1` < `1.5`-True]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`1` == `1.0`-True]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`1` > `false`-None]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`2` >= `2`-True]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`[1]` < `\"a\"`-None]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`null` < `1`-None]",
+    "hidden_tests.test_pass_to_pass::test_comparisons_unchanged[`true` < `1`-None]",
+    "hidden_tests.test_pass_to_pass::test_custom_function_type_error_propagates[boom(a) < `1`]",
+    "hidden_tests.test_pass_to_pass::test_custom_function_type_error_propagates[items[?boom(@) > `1`]]",
+    "hidden_tests.test_pass_to_pass::test_custom_function_type_error_propagates[max_by(items, &boom(@))]",
+    "hidden_tests.test_pass_to_pass::test_custom_function_type_error_propagates[min_by(items, &boom(@))]",
+    "hidden_tests.test_pass_to_pass::test_custom_function_type_error_propagates[sort_by(items, &boom(@))]",
+    "hidden_tests.test_pass_to_pass::test_custom_function_value_error_propagates",
+    "hidden_tests.test_pass_to_pass::test_sort_by_mixed_still_raises_type_error"
+  ],
+  "mutants": {
+    "broad-except": {
+      "rejected": true,
+      "failing_hidden_tests": 4,
+      "examples": [
+        "test_custom_function_type_error_propagates[boom(a) < `1`]",
+        "test_custom_function_type_error_propagates[items[?boom(@) > `1`]]",
+        "test_custom_function_type_error_propagates[max_by(items, &boom(@))]"
+      ],
+      "summary": {
+        "fail_to_pass": "24/24",
+        "pass_to_pass": "30/34",
+        "visible": "991/992"
+      }
+    },
+    "comparator-only": {
+      "rejected": true,
+      "failing_hidden_tests": 9,
+      "examples": [
+        "test_by_functions_raise_jmespath_type_error[ages0-max_by]",
+        "test_by_functions_raise_jmespath_type_error[ages0-min_by]",
+        "test_by_functions_raise_jmespath_type_error[ages1-max_by]"
+      ],
+      "summary": {
+        "fail_to_pass": "15/24",
+        "pass_to_pass": "34/34",
+        "visible": "991/992"
+      }
+    }
+  }
+}

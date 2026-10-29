@@ -1,0 +1,6 @@
+id = "mixed-type-ordering"
+kind = "bugfix"
+title = "Raw TypeError when ordering a string against a number"
+base = "../../upstream/jmespath"
+source_dirs = ["jmespath"]
+timeout_seconds = 120

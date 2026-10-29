@@ -1,0 +1,183 @@
+diff --git a/CHANGELOG.rst b/CHANGELOG.rst
+index dc673df..1c0be3d 100644
+--- a/CHANGELOG.rst
++++ b/CHANGELOG.rst
+@@ -1,7 +1,8 @@
+ Next Release (TBD)
+ ==================
+ 
+-* No changes yet.
++* Move the JMESPath type model into ``jmespath.types``. ``TYPES_MAP`` and
++  ``REVERSE_TYPES_MAP`` are still importable from ``jmespath.functions``.
+ 
+ 
+ 1.1.0
+diff --git a/jmespath/functions.py b/jmespath/functions.py
+index 627b569..eda7765 100644
+--- a/jmespath/functions.py
++++ b/jmespath/functions.py
+@@ -4,35 +4,11 @@ import json
+ from jmespath import exceptions
+ from jmespath.compat import string_type as STRING_TYPE
+ from jmespath.compat import get_methods
+-
+-
+-# python types -> jmespath types
+-TYPES_MAP = {
+-    'bool': 'boolean',
+-    'list': 'array',
+-    'dict': 'object',
+-    'NoneType': 'null',
+-    'unicode': 'string',
+-    'str': 'string',
+-    'float': 'number',
+-    'int': 'number',
+-    'long': 'number',
+-    'OrderedDict': 'object',
+-    '_Projection': 'array',
+-    '_Expression': 'expref',
+-}
+-
+-
+-# jmespath types -> python types
+-REVERSE_TYPES_MAP = {
+-    'boolean': ('bool',),
+-    'array': ('list', '_Projection'),
+-    'object': ('dict', 'OrderedDict',),
+-    'null': ('NoneType',),
+-    'string': ('unicode', 'str'),
+-    'number': ('float', 'int', 'long'),
+-    'expref': ('_Expression',),
+-}
++# Local copies of the tables in jmespath.types.
++from jmespath.types import REVERSE_TYPES_MAP as _R, TYPES_MAP as _T
++TYPES_MAP = dict(_T)
++REVERSE_TYPES_MAP = dict(_R)
++from jmespath.types import jmespath_type_from_name
+ 
+ 
+ def signature(*arguments):
+@@ -359,4 +335,6 @@ class Functions(metaclass=FunctionRegistry):
+         return keyfunc
+ 
+     def _convert_to_jmespath_type(self, pyobject):
+-        return TYPES_MAP.get(pyobject, 'unknown')
++        # Kept for subclasses that call it; the mapping lives in
++        # jmespath.types.
++        return jmespath_type_from_name(pyobject)
+diff --git a/jmespath/types.py b/jmespath/types.py
+new file mode 100644
+index 0000000..0494d07
+--- /dev/null
++++ b/jmespath/types.py
+@@ -0,0 +1,67 @@
++"""The JMESPath type model in one place.
++
++JMESPath has seven types: string, number, boolean, array, object, null and
++expref. The function type checker maps a Python value to one of them by the
++*name* of its Python type, not by isinstance(), so that bool is never treated
++as a number. Values whose type name is not listed map to "unknown".
++
++This module has no imports from the rest of the package, so any module can
++import it without creating an import cycle.
++"""
++from numbers import Number
++
++# python type names -> jmespath types
++TYPES_MAP = {
++    'bool': 'boolean',
++    'list': 'array',
++    'dict': 'object',
++    'NoneType': 'null',
++    'unicode': 'string',
++    'str': 'string',
++    'float': 'number',
++    'int': 'number',
++    'long': 'number',
++    'OrderedDict': 'object',
++    '_Projection': 'array',
++    '_Expression': 'expref',
++}
++
++
++# jmespath types -> python type names
++REVERSE_TYPES_MAP = {
++    'boolean': ('bool',),
++    'array': ('list', '_Projection'),
++    'object': ('dict', 'OrderedDict',),
++    'null': ('NoneType',),
++    'string': ('unicode', 'str'),
++    'number': ('float', 'int', 'long'),
++    'expref': ('_Expression',),
++}
++
++
++def jmespath_type_from_name(python_type_name):
++    """Return the JMESPath type for a Python type name, or "unknown"."""
++    return TYPES_MAP.get(python_type_name, 'unknown')
++
++
++def jmespath_type(value):
++    """Return the JMESPath type the function type checker gives ``value``."""
++    return jmespath_type_from_name(type(value).__name__)
++
++
++def is_number(value):
++    """True for numbers, False for bool (which Python treats as an int)."""
++    # >>> isinstance(True, int)
++    # True
++    if isinstance(value, bool):
++        return False
++    return isinstance(value, Number)
++
++
++def is_comparable(value):
++    """True if ``value`` may appear in an ordering comparison (<, >, ...)."""
++    # The spec doesn't officially support string types yet,
++    # but enough people are relying on this behavior that
++    # it's been added back.  This should eventually become
++    # part of the official spec.
++    return is_number(value) or isinstance(value, str)
+diff --git a/jmespath/visitor.py b/jmespath/visitor.py
+index 15fb177..7da7e90 100644
+--- a/jmespath/visitor.py
++++ b/jmespath/visitor.py
+@@ -1,8 +1,8 @@
+ import operator
+ 
+ from jmespath import functions
+-from jmespath.compat import string_type
+-from numbers import Number
++from jmespath.types import is_comparable as _is_comparable
++from jmespath.types import is_number as _is_actual_number
+ 
+ 
+ def _equals(x, y):
+@@ -35,27 +35,6 @@ def _is_special_number_case(x, y):
+         return isinstance(x, bool)
+ 
+ 
+-def _is_comparable(x):
+-    # The spec doesn't officially support string types yet,
+-    # but enough people are relying on this behavior that
+-    # it's been added back.  This should eventually become
+-    # part of the official spec.
+-    return _is_actual_number(x) or isinstance(x, string_type)
+-
+-
+-def _is_actual_number(x):
+-    # We need to handle python's quirkiness with booleans,
+-    # specifically:
+-    #
+-    # >>> isinstance(False, int)
+-    # True
+-    # >>> isinstance(True, int)
+-    # True
+-    if isinstance(x, bool):
+-        return False
+-    return isinstance(x, Number)
+-
+-
+ class Options(object):
+     """Options to control how a JMESPath function is evaluated."""
+     def __init__(self, dict_cls=None, custom_functions=None):

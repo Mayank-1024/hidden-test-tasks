@@ -1,0 +1,9 @@
+id = "let-expressions"
+kind = "feature"
+title = "Add let expressions and variable references (lexical scoping)"
+# The tree the solver starts from, relative to this file.
+base = "../../upstream/jmespath"
+# Only these directories are taken from the solver's tree when grading.
+# Everything else (tests, config) comes from the pristine base.
+source_dirs = ["jmespath"]
+timeout_seconds = 120
